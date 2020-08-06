@@ -201,7 +201,7 @@ shinyUI(
                "SAMPLES",
                
                
-               div(DT::dataTableOutput("sampletable"))
+               div(DT::dataTableOutput("sampletable"), style = 'overflow-x: scroll')
                
              ),
              
@@ -506,7 +506,7 @@ shinyUI(
                         
                         mainPanel(
                           
-                          dataTableOutput("selected_mutation")
+                          div(dataTableOutput("selected_mutation"), style = 'overflow-x: scroll')
                           
                           
                         )

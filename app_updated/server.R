@@ -487,32 +487,41 @@ function(input, output, session) {
 	  dons = c(); mm =c()
 
 	  for (j in 1:length(input$donor_choice_mutation)){
-		  input_donor_choice_mutation = as.vector( mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation[j])] )
+		  input_donor_choice_mutation = as.vector(mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation[j])])
 		  dons = c(dons,input_donor_choice_mutation)
       input_file_mutation <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_",input_donor_choice_mutation,".rds")
+      print(input$var)
+      print(input_file_mutation)
+      print(input_donor_choice_mutation)
+      t = readRDS(input_file_mutation)
+      print(t)
 	  mm = rbind(mm, readRDS(input_file_mutation))
-	  }
-      
-      #input_file_mutation <- paste0("./consensus_",input$var,"_ind/consensus_SNV_all_samples.rds")
-	  #print(input_file_mutation)
-      #mm = readRDS(input_file_mutation)
-	  #mm = mm[which(mm$sample %in% dons),] #input$donor_choice_mutation),]
-	  rownames(mm) = 1:nrow(mm)
-	  if(input$var == "SNV"){
-	  mm$normal_DP = round(mm$normal_DP)
-	  mm$tumour_DP = round(mm$tumour_DP)
-	  mm$normal_VAF = round(mm$normal_VAF,digits=2)
-	  mm$tumour_VAF = round(mm$tumour_VAF,digits=2)
-	  }else{ #indels
-		  mm$tumour_DP = round(mm$tumour_DP)
-mm$tumour_VAF = round(mm$tumour_VAF,digits=2)
+	  print(head(mm))
 	  }
 	  return(mm)
-    })
+	  
+     
+#       #input_file_mutation <- paste0("./consensus_",input$var,"_ind/consensus_SNV_all_samples.rds")
+# 	  #print(input_file_mutation)
+# 	  #print(mm)
+#       #mm = readRDS(input_file_mutation)
+# 	  #mm = mm[which(mm$sample %in% dons),] #input$donor_choice_mutation),]
+# 	  rownames(mm) = 1:nrow(mm)
+# 	  if(input$var == "SNV"){
+# 	  mm$normal_DP = round(mm$normal_DP)
+# 	  mm$tumour_DP = round(mm$tumour_DP)
+# 	  mm$normal_VAF = round(mm$normal_VAF,digits=2)
+# 	  mm$tumour_VAF = round(mm$tumour_VAF,digits=2)
+# 	  }else{ #indels
+# 	  mm$tumour_DP = round(mm$tumour_DP)
+#     mm$tumour_VAF = round(mm$tumour_VAF,digits=2)
+# 	  }
+# 	  return(mm)
+	      })
     
     #output of data_table for mutation data (snv/indels)
     
-    output$selected_mutation <- DT::renderDataTable({ DT::datatable(mutation_data_table(), filter = list(
+    output$selected_mutation <- DT::renderDataTable({ DT::datatable(mutation_data_table(), filter = list(   
       position = 'top', clear = FALSE))
     })
     
