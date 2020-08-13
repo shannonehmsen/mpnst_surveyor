@@ -238,7 +238,7 @@ shinyUI(
                       
                      
                       
-                      tags$h4("SNVs", style = "font-size:27px; color: black; font-family: Verdana; padding: 20px;"),
+                      tags$h4("SNVs", style = "font-size: 25px; color: black; font-family: Verdana; padding: 20px;"),
                       fluidRow( #sidebarPanel(width=12,
                         shiny::column(12,
                                       
@@ -252,7 +252,7 @@ shinyUI(
                       br(),
                       br(),
                       
-                      tags$h4("INDELs", style = "font-size:27px; color: black; font-family: Verdana; padding: 20px;"),
+                      tags$h4("INDELs", style = "font-size: 25px; color: black; font-family: Verdana; padding: 20px;"),
                       fluidRow( #sidebarPanel(width=12,
                         shiny::column(12,
                                       
@@ -267,7 +267,7 @@ shinyUI(
                       br(),
                       
                       
-                      tags$h4("CN Data", style = "font-size:27px; color: black; font-family: Verdana; padding: 20px;"),
+                      tags$h4("CN Data", style = "font-size: 25px; color: black; font-family: Verdana; padding: 20px;"),
                       fluidRow( #sidebarPanel(width=12,
                         shiny::column(12,
                        
