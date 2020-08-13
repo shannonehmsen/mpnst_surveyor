@@ -32,28 +32,6 @@ function(input, output, session) {
     # 
     
     
-    # yearData <- reactive({
-    #     print(d$donor_age_at_diagnosis)
-    #     idx = which(d$purity >= input$purity & d$ploidy >= input$ploidy & d$histo %in% input$cancer_type & 
-    #                     d$Chr %in% input$chrom)
-    #     all_cases=d[idx,]
-    #     df = unique(d[idx, c("donor_unique_id ","purity","ploidy","histo","SVs in sample","donor_age_at_diagnosis")])
-    #     
-    #     ## second data frame 
-    #     idx2 = which(d$purity >= input$purity & d$ploidy >= input$ploidy & d$histo %in% input$cancer_type &
-    #                      d$Chr %in% input$chrom & 
-    #                      d[,"Nb. oscillating CN"] >= input$oscil2 & d$ratio >= input$fraction_SVs_chromo)
-    #     
-    #     d$donor_chr = paste(d$donor_unique_id , "; chromosome ",d$Chr,sep="")
-    #     df2 = unique(d[idx2, c("donor_chr","ratio","Nb. oscillating CN","histo","SVs in sample","Chr","donor_age_at_diagnosis")])
-    #     names(df2) = c("donor_chr","Fraction of SVs in the tumor involved in chromothripsis and mapped to this chr","Nb. oscillating CN between 2 states","cancer type","SVs in sample","Chr","donor_age_at_diagnosis")
-    #     names(df)[4] = names(df2)[4] = "Cancer type"
-    #     return(list(df,df2,all_cases))
-    # })
-    # 
-    # 
-    # 
-    
     selectedData <- reactive({
         d[which(d$donor_unique_id  == input$donor & d$Chr == input$chromosome),]
     })
@@ -133,14 +111,14 @@ function(input, output, session) {
 	   input$chr_selection_circos
 	   ), {
     output$table_SNVs <- DT::renderDataTable({
-        DT::datatable(loadsnvtable(), style = 'bootstrap',filter = list(position = "top"), options=list(pageLength = 10,lengthMenu = c( 10, 25, 100), scrollX = T ))
+        DT::datatable(loadsnvtable(), style = 'bootstrap',filter = list(position = "top", clear = FALSE), options=list(pageLength = 10, lengthMenu = c( 10, 25, 100), scrollX = T ))
     })
     output$table_CN <- DT::renderDataTable({
-      DT::datatable(loadcntable(), style = 'bootstrap',filter = list(position = "top"), options=list(pageLength = 10,lengthMenu = c( 10, 25, 100), scrollX = T ),
+      DT::datatable(loadcntable(), style = 'bootstrap',filter = list(position = "top", clear = FALSE), options=list(pageLength = 10,lengthMenu = c( 10, 25, 100), scrollX = T ),
                     colnames = c('Chr', 'Start', 'End', 'Orientation', 'Gene','Total CN','Minor CN'))
     })
     output$table_INDELs <- DT::renderDataTable({
-      DT::datatable(loadindeltable(), style = 'bootstrap',filter = list(position = "top"), options=list(pageLength = 10,lengthMenu = c( 10, 25, 100), scrollX = T ))
+      DT::datatable(loadindeltable(), style = 'bootstrap',filter = list(position = "top", clear = FALSE), options=list(pageLength = 10,lengthMenu = c( 10, 25, 100), scrollX = T ))
     })
     
 	}
@@ -244,7 +222,7 @@ function(input, output, session) {
     #the file "firsttabledata"
     
     output$sampletable <- DT::renderDataTable({ DT::datatable(sample_data_table, filter = list(
-      position = 'top', clear = FALSE)) 
+      position = 'top', clear = FALSE),  options = list(ordering=F)) 
     })
     
     
@@ -318,6 +296,16 @@ function(input, output, session) {
     # })
     # 
 
+    
+    ### reload biocircos tab opion 
+    
+    ## if clicked, this action button reloads the tab containing the biocircos plots 
+    
+    # observeEvent(input$link_to_reload_biocircos, {
+    #     plot_biocirc(input)#$chrs_selection_circos) XXXXXX
+    #   
+    # 
+    # })
 
 
     

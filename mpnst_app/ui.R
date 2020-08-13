@@ -58,12 +58,19 @@ shinyUI(
                
                "SAMPLES",
                
+               h2("This data table displays clinical and genomic information about the patients in the GeM cohort:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; color: black;"),
                
-               div(DT::dataTableOutput("sampletable"), style = 'overflow-x: scroll; font-size: 83%; width = 68%')
+               br(),
+               
+               h5("Please use the filter boxes to refine your search.", style="font-family: Verdana; font-size: 11pt; color: black;"),
+               
+               br(),
+               
+               div(DT::dataTableOutput("sampletable"), style = 'overflow-x: scroll; padding: 25px; font-size: 84%; width = 62%')
     
              ),
              
-             tabPanel("EXPLORE",
+             tabPanel("EXPLORE", id="biocircos_panel",
                       
                       
                       fluidRow(sidebarPanel
@@ -71,7 +78,7 @@ shinyUI(
                       
                       h1("Interactive circos plots reporting SNVs, 
 											indels, total CNV, minor CN (LOH), and SV calls",
-                          style="text-align: center; font-size:31px;"))),
+                          style="text-align: center; font-size:26px;"))),
                       
                       
                       ### HTML commands to change the background color of the side panels 
@@ -110,7 +117,7 @@ shinyUI(
                                        #fluidRow(
                                        
                                        #sidebarPanel(width=3,
-                                       h5("Circos plot options",style="font-weight: bold;"),
+                                       h5("Circos plot options*",style="font-weight: bold;"),
                                        checkboxInput( inputId='show_patho_indels', label='Show pathogenic indels',value = FALSE),
                                        checkboxInput( inputId='show_nopatho_indels', label='Show non-pathogenic indels',value = FALSE),
                                        checkboxInput( inputId='show_patho', label='Show pathogenic SNVs',value = FALSE),
@@ -123,6 +130,23 @@ shinyUI(
                                        # show genes?
                                        checkboxInput( inputId='show_genes', label='Show gene track',value = TRUE),
                                        
+                                       
+                                       br(),
+                                       br(),
+                                    
+                                       
+                                       h5("Scroll here to view the associated data below", style="color:black; font-family: Verdana;"),
+                                       
+                                       
+                                       br(),
+                                       br(),
+                                       
+                                       h5("*Note: scrolling within the BioCircos chart activates zoom functionality", style="color:black; font-family: Verdana;"),
+                                       
+                                       br()
+                                       # br(),
+                                       # 
+                                       # actionLink("link_to_reload_biocircos", "Reload BioCircos")
                                     
                                        
                                      )
@@ -214,13 +238,13 @@ shinyUI(
                       
                      
                       
-                      tags$h4("SNVs", style = "font-size:25px; color: black; font-family: Verdana"),
+                      tags$h4("SNVs", style = "font-size:27px; color: black; font-family: Verdana; padding: 20px;"),
                       fluidRow( #sidebarPanel(width=12,
                         shiny::column(12,
                                       
                                       div(
                                         div(
-                                          DT::dataTableOutput("table_SNVs"), style = "overflow-x: scroll; font-size: 83%; width = 70%;")
+                                          DT::dataTableOutput("table_SNVs"), style = "overflow-x: scroll; padding: 25px; font-size: 83%; width = 70%;")
                                         
                                       ))
                       ),
@@ -228,13 +252,13 @@ shinyUI(
                       br(),
                       br(),
                       
-                      tags$h4("INDELs", style = "font-size:25px; color: black; font-family: Verdana"),
+                      tags$h4("INDELs", style = "font-size:27px; color: black; font-family: Verdana; padding: 20px;"),
                       fluidRow( #sidebarPanel(width=12,
                         shiny::column(12,
                                       
                                       div(
                                         div(
-                                          DT::dataTableOutput("table_INDELs"),  style = "overflow-x: scroll; font-size: 83%; width = 70%;")
+                                          DT::dataTableOutput("table_INDELs"), style = "overflow-x: scroll; padding: 25px; font-size: 83%; width = 70%;")
                                         
                                       ))
                       ),
@@ -243,14 +267,14 @@ shinyUI(
                       br(),
                       
                       
-                      tags$h4("CN Data", style = "font-size:25px; color: black; font-family: Verdana"),
+                      tags$h4("CN Data", style = "font-size:27px; color: black; font-family: Verdana; padding: 20px;"),
                       fluidRow( #sidebarPanel(width=12,
                         shiny::column(12,
                        
                                       
                                       div(
                                         div(
-                                          DT::dataTableOutput("table_CN"),  style = "overflow-x: scroll; display: font-size: 83%; width = 70%; inline-block; padding: 15px;")
+                                          DT::dataTableOutput("table_CN"),  style = "overflow-x: scroll; padding: 25px; font-size: 83%; width = 70%;")
                                         
                                       ))
                       )
@@ -335,7 +359,7 @@ shinyUI(
                              
                              tags$a(
                                href="https://www.cbioportal.org/study/summary?id=mpnst_mskcc", 
-                               tags$img(src="cBioPortalLogo.png.jfif", 
+                               tags$img(src="cbioportal_logo.png", 
                                        
                                         width="850",
                                         height="310")
