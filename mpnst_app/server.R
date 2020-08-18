@@ -272,6 +272,8 @@ function(input, output, session) {
            input_file_mutation_all <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_all_samples.rds")
 
            nn = readRDS(input_file_mutation_all)
+           
+           rownames(nn) = 1:nrow(nn)
 
            return(nn)
 
