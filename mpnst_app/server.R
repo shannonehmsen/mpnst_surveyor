@@ -335,10 +335,11 @@ function(input, output, session) {
       
       old_donor_name = as.vector(mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)])
       
-      ##which(colnames(mutation_data_table())=="sample") 
-      ## ^^ option for retrieving col number given column name sample 
+      ##which(colnames(mutation_data_table())=="sample")
+      ##match("sample",names(mutation_data_table()))
+      ## ^^ options for retrieving col number given column name sample 
       
-      donor_id_from_column = mutation_data_table()[input$selected_mutation_cell_clicked$row,match("sample",names(mutation_data_table()))]
+      donor_id_from_column = mutation_data_table()[input$selected_mutation_cell_clicked$row,which(colnames(mutation_data_table())=="sample")]
       
             
       bamsnap_folder = paste0("bamsnap_",input$var)
