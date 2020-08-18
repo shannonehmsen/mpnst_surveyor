@@ -12,11 +12,10 @@ source("biocircos_plots.R")
 source("load_data.R")
 
 function(input, output, session) {
-#    
-#    #choices_cancer = sort(unique(d$histo)) 
-#    
-#    
-#    observe({
+
+ 
+
+  #    observe({
 #        output$cancer_type <- renderUI({
 #            selectizeInput(multiple=T,'donor', 'Donor ID', choices_cancer)
 #        })
@@ -30,12 +29,18 @@ function(input, output, session) {
     #     names = colours_ICGC$V1
     # )
     # 
+  
+  
+    ## this function is used to generate the associated clinical data for each selected donor 
+    ## that is available via BioCircos plots 
     
     
     selectedData <- reactive({
         d[which(d$donor_unique_id  == input$donor & d$Chr == input$chromosome),]
     })
     
+    
+    ## renders data from only the selected donor 
     
     selectedData_donor_info <- reactive({
         out = unique(clinical[which(clinical$donor_unique_id  == input$donor),])
@@ -45,6 +50,8 @@ function(input, output, session) {
     })
     
   
+    ## generates a list of all the donors (samples) by drawing all unique strings from the 'donor_unique_id' 
+    ## column of the combined clinical and genomic data table 
     
     get_donor_list = function(d,input){
         
@@ -52,6 +59,8 @@ function(input, output, session) {
         return(d_unique)
     }
     
+    
+    ## dropdown menu option so the user can select which sample to view 
     
     output$donor_choice <- renderUI({
         selectizeInput(multiple=F,'donor', 'Donor ID', 
@@ -158,7 +167,6 @@ function(input, output, session) {
       
     })
     
-    
     loadcntable <- reactive({
       donor = as.vector( mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor)] )
       cn_file = paste0("./CN_for_all_genes/CN_for_all_genes_",donor,".bed")
@@ -180,18 +188,6 @@ function(input, output, session) {
 
 
 
-    
-    # output$mytable2 <- DT::renderDataTable({
-    #     DT::datatable(selectedData_all_chrs(), style = 'bootstrap') %>% formatStyle(
-    #         #c(as.character(1:22,"X")),
-    #         input$cols_to_show,
-    #         #get_chrs_with(d,input),
-    #         backgroundColor = styleEqual(c("High confidence","Linked to high confidence", "Linked to low confidence","Low confidence","No"), 
-    #                                      c('#eded2a','#eded2a','#a1d99b','#a1d99b','#ece2f0'))
-    #         #c('#feb24c', '#feb24c','#a1d99b','#a1d99b','#ece2f0'))
-    # #     )
-    # # })
-    # 
     #-------------------------------------------------
     # Table with donor information (e.g. age, etc..)
     output$table_donor_info <- DT::renderDataTable({
@@ -203,19 +199,11 @@ function(input, output, session) {
     output$find_case <- DT::renderDataTable({
         DT::datatable(selectedData_find_case(), style = 'bootstrap',filter = list(position = "top") )
     })
-
     
     
     
-    ### MPNST SERVER INTEGRATION 
+    #import file for the sample data table with clinical and genomic data 
     
-    
-    #functions referencing donor choice made in biocircos plots
-    
-    
-    
-    
-    #import file of sample data
     sample_data_table <- read.delim('combined_sample_table_genomic_clinical_data.txt')
     
     #describes the output of the function "sampletable", which renders a data table using 
@@ -231,23 +219,31 @@ function(input, output, session) {
     
     
     mutation_data_table <- reactive({   #XXXX ew need to load multiple donors
-      print(input$donor_choice_mutation) 
+      #print(input$donor_choice_mutation) 
       #input_donor_choice_mutation = as.vector( mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)] )
 
-	  dons = c(); mm =c()
 
+    if(input$type=="Select Donors"){
+      
+    dons = c(); mm =c()
+
+#	 for (i in 1:length(input$var)) {
+	   
 	  for (j in 1:length(input$donor_choice_mutation)){
 		  input_donor_choice_mutation = as.vector(mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation[j])])
 		  dons = c(dons,input_donor_choice_mutation)
       input_file_mutation <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_",input_donor_choice_mutation,".rds")
-      print(input$var)
-      print(input_file_mutation)
-      print(input_donor_choice_mutation)
+      #print(input$var)
+      #print(input_file_mutation)
+      #print(input_donor_choice_mutation)
       t = readRDS(input_file_mutation)
-      print(t)
+      #print(t)
 	  mm = rbind(mm, readRDS(input_file_mutation))
 	  print(head(mm))
 	  }
+	   
+#	 }
+	  rownames(mm) = 1:nrow(mm)
 	  return(mm)
 	  
 	  
@@ -270,34 +266,98 @@ function(input, output, session) {
 #     mm$tumour_VAF = round(mm$tumour_VAF,digits=2)
 # 	  }
 # 	  return(mm)
+	  
+   }    else {
+
+           input_file_mutation_all <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_all_samples.rds")
+
+           nn = readRDS(input_file_mutation_all)
+
+           return(nn)
+
+         }
 	      })
     
     #output of data_table for mutation data (snv/indels)
     
     output$selected_mutation <- DT::renderDataTable({ DT::datatable(mutation_data_table(), filter = list(   
-      position = 'top', clear = FALSE))
+      position = 'top', clear = FALSE), 
+      
+      selection=list(mode="single", target="cell")
+      
+      )
+      
     })
     
     
+    ### allows for the picker input to dissappear when the user is not opting to select donors 
     
-    ###CN Tables: 
     
-    #Lets the user choose between which sample to display the CN data for, will correspond with the donor that is specified  
-    
-    # CN_data_table <- reactive({
+    # output$mutation_data_choice <- reactive({
     #   
-    #   input_file_CN <- paste0("./CN_for_all_genes/CN_for_all_genes_",input$donor,".bed")
-    #   read.table(input_file_CN,header = FALSE, sep="\t",stringsAsFactors=FALSE, quote="")
+    #   pickerInput("donor_choice_mutation", multiple=TRUE,
+    # 
+    #               label = "To make selections, please choose at least one donor to view the corresponding data: ",
+    # 
+    #               choices = c(sort(unique(d$donor_unique_id))),
+    # 
+    #               selected = "BCH_001_S4FU683F_S7EH61A2")
     # })
-    # 
-    # 
-    # output$selected_var2 <- DT::renderDataTable({ DT::datatable(CN_data_table(), filter = list(
-    #   position = 'top', clear = FALSE))
-    # })
-    # 
+    
+  
+    
+    
+    ### renders a png of sequencing data corresponding with the specific mutation
+    # the user will select a chromosome start position on the data table which will generate the image below 
+    
+    
+    
+    output$bamsnap_image <- renderUI({
+      
+      
+      ## assign variable to selected cell 
+      
+      chr_location_cell = input$selected_mutation_cell_clicked
+      
+      
+      ## find the value of the selected cell 
+      
+      chr_location_value = chr_location_cell$value
+      
+      ## get the chromosome number from the cell to the left of selected cell 
+      
+      chr_number = mutation_data_table()[input$selected_mutation_cell_clicked$row,input$selected_mutation_cell_clicked$col - 1]
+      
+  
+      ## images use old sample id naming 
+      
+      old_donor_name = as.vector(mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)])
+      
+      ##which(colnames(mutation_data_table())=="sample") 
+      ## ^^ option for retrieving col number given column name sample 
+      
+      donor_id_from_column = mutation_data_table()[input$selected_mutation_cell_clicked$row,match("sample",names(mutation_data_table()))]
+      
+            
+      bamsnap_folder = paste0("bamsnap_",input$var)
+      
+      
+    
+      ## concatenate the call to file to pull the sequencing image 
+      
+      sequencing_image <- paste0("./",bamsnap_folder,"./",donor_id_from_column,"/",chr_number,"_",chr_location_value,".png")
+                         
+      #print(sequencing_image)
+      
+  
+      tags$img(src= sequencing_image)
+      
+      
+    })
+  
 
     
-    ### reload biocircos tab opion 
+    ### reload biocircos tab opion (incomplete)
     
     ## if clicked, this action button reloads the tab containing the biocircos plots 
     

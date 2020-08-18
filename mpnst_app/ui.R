@@ -7,6 +7,8 @@
 #    http://shiny.rstudio.com/
 #
 
+
+
 library(shiny)
 library(shinydashboard)
 library(DT)
@@ -317,23 +319,42 @@ shinyUI(
                                       
                                       helpText("This page allows for the exploration of mutation data through INDEL and SNV data"),
                                       
-                                      selectInput("var",
+                                      pickerInput("var", multiple=FALSE,
                                                   label = "Please click SNV or INDEL to view the data of your choosing: ",
                                                   choices = c("SNV",
                                                               "INDEL"),
                                                 
                                                   selected = "SNV"),
                                       
-                                    # uiOutput("chr_selection_circos"), 
-                                      selectInput("donor_choice_mutation", multiple=TRUE,
+                                      
+                                      pickerInput("type", multiple=FALSE,
+                                                  
+                                                  label = "View all samples, or make individual selections: ",
+                                                  choices = c("All","Select Donors"),
+                                                  
+                                                  selected = "All"
+                                                  ),
+                                      
+                                    
+                                
+                                      
+                                      # uiOutput("chr_selection_circos"), 
+                                      
+                                 
+                                     conditionalPanel(
+                                       
+                                      condition = "input.type == 'Select Donors'",
+                                  
+                                      pickerInput("donor_choice_mutation", multiple=TRUE,
 
-                                                  label = "Please choose a donor to view the corresponding data: ",
-                                                  
+                                                  label = "To make selections, please choose at least one donor to view the corresponding data: ",
+
                                                   choices = c(sort(unique(d$donor_unique_id))),
-                                                  
+
                                                   selected = "BCH_001_S4FU683F_S7EH61A2")
                                       
-                                      
+                                     )
+                                    
                         ),
                         
                         
@@ -342,9 +363,11 @@ shinyUI(
                         
                         mainPanel(
                           
-                          div(dataTableOutput("selected_mutation"), style = 'overflow-x: scroll; font-size: 83%; width = 69%')
+                          div(dataTableOutput("selected_mutation"), style = 'overflow-x: scroll; font-size: 83%; width = 69%'),
                           
-                          
+                          uiOutput("bamsnap_image")
+                        
+                        
                         )
                       )
                       
@@ -364,16 +387,13 @@ shinyUI(
                                         width="850",
                                         height="310")
                              )
-                      
-                      
-                    
-                  
-                      
-                      ),
-             tabPanel("FAQ")
+                      )
              
   )
+
+)
   
  
-)
+
+
 

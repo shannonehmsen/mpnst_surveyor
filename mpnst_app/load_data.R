@@ -9,6 +9,7 @@ d = calls_all
 #d$CNV = d['SCNA calls file']
 #d$CNV = as.vector(unlist(d$CNV))
 
+
 #names(d)[which(names(d) == "stage_backup")] = "tumor_stage"
 #names(d)[3] = "Start coordinate for SV cluster in chr"
 #names(d)[4] = "End coordinate for SV cluster in chr"
