@@ -4,10 +4,10 @@ library(BioCircos)
 library(shiny)
 library(shinyWidgets)
 library(RColorBrewer)
+library(data.table)
 source("biocircos_plots.R")
 #colours_ICGC= read.table("ICGC_colours_2.txt",sep="\t",header=F,stringsAsFactors = F,comment.char="")
 #d$colour_ICGC = colours_ICGC$V2[match(d$histo,colours_ICGC$V1)]
-
 
 source("load_data.R")
 
@@ -287,46 +287,84 @@ function(input, output, session) {
          }
 	      })
     
-    #output of data_table for mutation data (snv/indels)
     
-    output$selected_mutation <- DT::renderDataTable({ DT::datatable(mutation_data_table(), filter = list(   
-      position = 'top', clear = FALSE), 
+    ## provides a picker input with the list of chromosomes to choose from 
+    
+    output$mutation_data_chr_picker <- renderUI({
+      pickerInput( 'chr_selection_mutation_table', 'Please choose at least one chromosome to view the corresponding data:', 
+          choices = as.character(paste0("chr",c(1:22,"X"))),
+          #selected=get_with2(d,input)[[2]],
+          selected=as.character(paste0("chr",c(1:22,"X"))),
+          options = list( `actions-box` = TRUE, size = 5, 
+                          `selected-text-format` = "count > 3" ), multiple = TRUE )
+    })
+    
+   
+     #output of data_table for mutation data (snv/indels)
+    
+    
+
+    
+    output$selected_mutation_no_chr_sort <- DT::renderDataTable({
       
-      selection=list(mode="single", target="cell")
-      
+      DT::datatable(mutation_data_table(), filter = list(   
+        position = 'top', clear = FALSE), 
+        
+        selection=list(mode="single", target="cell")
       )
       
     })
     
     
-    ### allows for the picker input to dissappear when the user is not opting to select donors 
+    output$selected_mutation_chr_sort <- DT::renderDataTable({
+      
+      
+      
+      ## get all the chromosomes selected by the user 
+      
+      chr_choices <- input$chr_selection_mutation_table
+      
+      
+      ##change to data.table because need to show only rows with specific chromosome values 
+      
+      x <- data.table(mutation_data_table())
+      
+      ##set key to the column where chromosome values are 
+      
+      setkey(x,Chr) 
+      
+      
+      ## sort by which rows have the chr values selected 
+      
+      x2 <- x[c(chr_choices)]
+      
+      ## change data.table back to df to be rendered
+      
+      class(as.data.frame(x2))
+      
+      ## renders the modified DT
+      
+      DT::datatable(x2, filter = list(   
+        position = 'top', clear = FALSE), 
+        
+        selection=list(mode="single", target="cell")
+      )
+      
+    })
     
     
-    # output$mutation_data_choice <- reactive({
-    #   
-    #   pickerInput("donor_choice_mutation", multiple=TRUE,
-    # 
-    #               label = "To make selections, please choose at least one donor to view the corresponding data: ",
-    # 
-    #               choices = c(sort(unique(d$donor_unique_id))),
-    # 
-    #               selected = "BCH_001_S4FU683F_S7EH61A2")
-    # })
     
-  
+    ## renders a png of sequencing data corresponding with the specific mutation
+    ## the user will select a chromosome start position on the data table which will generate the image below 
+    ## specifically for the datatable where all chrs are being selected
     
-    
-    ### renders a png of sequencing data corresponding with the specific mutation
-    # the user will select a chromosome start position on the data table which will generate the image below 
-    
-    
-    
-    output$bamsnap_image <- renderUI({
+
+    output$bamsnap_image_selected_all <- renderUI({
       
       
       ## assign variable to selected cell 
       
-      chr_location_cell = input$selected_mutation_cell_clicked
+      chr_location_cell = input$selected_mutation_no_chr_sort_cell_clicked
       
       
       ## find the value of the selected cell 
@@ -335,9 +373,9 @@ function(input, output, session) {
       
       ## get the chromosome number from the cell to the left of selected cell 
       
-      chr_number = mutation_data_table()[input$selected_mutation_cell_clicked$row,input$selected_mutation_cell_clicked$col - 1]
+      chr_number = mutation_data_table()[input$selected_mutation_no_chr_sort_cell_clicked$row,which(colnames(mutation_data_table())=="Chr")]
       
-  
+      
       ## images use old sample id naming 
       
       old_donor_name = as.vector(mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)])
@@ -346,38 +384,79 @@ function(input, output, session) {
       ##match("sample",names(mutation_data_table()))
       ## ^^ options for retrieving col number given column name sample 
       
-      donor_id_from_column = mutation_data_table()[input$selected_mutation_cell_clicked$row,which(colnames(mutation_data_table())=="sample")]
+      donor_id_from_column = mutation_data_table()[input$selected_mutation_no_chr_sort_cell_clicked$row,which(colnames(mutation_data_table())=="sample")]
       
-            
+      
       bamsnap_folder = paste0("bamsnap_",input$var)
       
       
-    
+      
       ## concatenate the call to file to pull the sequencing image 
       
       sequencing_image <- paste0("/",bamsnap_folder,"/",donor_id_from_column,"/",chr_number,"_",chr_location_value,".png")
-                         
+      
       print(sequencing_image)
       
-  
+      
       tags$img(src= sequencing_image)
       
       
     })
-  
-
     
-    ### reload biocircos tab opion (incomplete)
     
-    ## if clicked, this action button reloads the tab containing the biocircos plots 
     
-    # observeEvent(input$link_to_reload_biocircos, {
-    #     plot_biocirc(input)#$chrs_selection_circos) XXXXXX
-    #   
-    # 
-    # })
-
-
+    ## renders a png of sequencing data corresponding with the specific mutation
+    ## the user will select a chromosome start position on the data table which will generate the image below 
+    ## specifically for the datatable where certain chrs are being selected
+    ## added "_1 to all variable names to avoid conflict with other bamsnap image loading function
+    
+    
+    
+    output$bamsnap_image_selected_chrs <- renderUI({
+      
+      
+      ## assign variable to selected cell
+      
+      chr_location_cell_1 = input$selected_mutation_chr_sort_cell_clicked
+      
+      
+      ## find the value of the selected cell
+      
+      chr_location_value_1 = chr_location_cell_1$value
+      
+      ## get the chromosome number from the cell to the left of selected cell
+      
+      chr_number_1 = mutation_data_table()[input$selected_mutation_chr_sort_cell_clicked$row,which(colnames(mutation_data_table())=="Chr")]
+      
+      
+      ## images use old sample id naming
+      
+      old_donor_name_1 = as.vector(mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)])
+      
+      ##which(colnames(mutation_data_table())=="sample")
+      ##match("sample",names(mutation_data_table()))
+      ## ^^ options for retrieving col number given column name sample
+      
+      donor_id_from_column_1 = mutation_data_table()[input$selected_mutation_chr_sort_cell_clicked$row, which(colnames(mutation_data_table())=="sample")]
+      print(donor_id_from_column_1)
+      
+      
+      bamsnap_folder_1 = paste0("bamsnap_",input$var)
+      
+      
+      
+      ## concatenate the call to file to pull the sequencing image
+      
+      sequencing_image_1 <- paste0("/",bamsnap_folder_1,"/",donor_id_from_column_1,"/",chr_number_1,"_",chr_location_value_1,".png")
+      
+      
+      print(sequencing_image_1)
+      tags$img(src= sequencing_image_1)
+      
+      
+    })
+    
+    
     
     }
     

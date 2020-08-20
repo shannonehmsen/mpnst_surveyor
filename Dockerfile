@@ -1,15 +1,15 @@
 FROM rocker/shiny-verse:latest
 
-# install necessary libraries 
+# install necessary libraries
 
 RUN apt-get update && apt-get install -y \
     sudo \
     nano \
     libssl-dev \
-    libssh2-1-dev 
-  
+    libssh2-1-dev
 
-# install necessary R packages 
+
+# install necessary R packages
 
 
 RUN R -e "install.packages('plyr', repos='http://cran.rstudio.com/')"
@@ -37,7 +37,13 @@ RUN  echo 'install.packages(c("shiny", "shinyWidgets", "shinydashboard"),\
 
 
 # select port
-EXPOSE 3838
+EXPOSE 8000
+
+# allow permission
+# RUN sudo chown -R shiny:shiny /srv/shiny-server
+
+# run app
+ CMD ["R", "-e", "shiny::runApp('/srv/shiny-server/mpnst_app', 8000, host='0.0.0.0')"]
 
 # allow permission
 RUN sudo chown -R shiny:shiny /srv/shiny-server

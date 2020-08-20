@@ -18,9 +18,28 @@ library(shinycssloaders)
 library(ggplot2)
 library(BioCircos)
 library(RColorBrewer)
+source("load_data.R")
 
 
 
+##attaching these calls from load_data.R 
+
+calls_all=read.delim("combined_sample_table_genomic_clinical_data.txt")
+d = calls_all
+d$donor_unique_id = as.vector(d$donor_unique_id)
+# # clinical data
+clinical = read.delim("combined_sample_table_genomic_clinical_data.txt")
+clinical$percentage_cellularity = NULL
+clinical$level_of_cellularity = NULL
+clinical$tcga_expert_re.review = NULL
+clinical$response <- NULL
+clinical$event <- NULL
+clinical$code <- NULL
+clinical$tissue <- NULL
+clinical$percentage_cellularity <- NULL
+clinical$project_code <- NULL
+clinical$donor_wgs_included_excluded = NULL
+names(clinical)[2]="donor_unique_id"
 
 
 shinyUI(
@@ -58,15 +77,15 @@ shinyUI(
                
                "SAMPLES",
                
-               h2("This data table displays clinical and genomic information about the patients in the GeM cohort:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; color: black; padding: 10px"),
+               h2("This data table displays clinical and genomic information about the patients in the GeM cohort:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; color: black; margin-left:5px;"),
                
                br(),
                
-               h5("Please use the filter boxes to refine your search.", style="font-family: Verdana; font-size: 11pt; color: black; padding: 10px;"),
+               h5("Please use the filter boxes to refine your search.", style="font-family: Verdana; font-size: 11pt; color: black; margin-left:5px;"),
                
                br(),
                
-               div(DT::dataTableOutput("sampletable"), style = 'overflow-x: scroll; padding: 25px; font-size: 84%; width = 62%')
+               div(DT::dataTableOutput("sampletable"), style = 'overflow-x: scroll; padding: 25px; font-size: 83%; width = 61%')
     
              ),
              
@@ -88,6 +107,10 @@ shinyUI(
                       tags$head(tags$style(
                             HTML('
                                  #sidebar_circos_top{
+                                    background-color: #FFFFFF;
+                                 }
+                                 
+                                 #sidebar_circos_bottom{
                                     background-color: #FFFFFF;
                                  }
                                  
@@ -133,13 +156,10 @@ shinyUI(
                                        
                                        
                                        br(),
-                                       br(),
                                     
                                        
                                        h5("Scroll here to view the associated data below", style="color:black; font-family: Verdana;"),
                                        
-                                       
-                                       br(),
                                        br(),
                                        
                                        h5("*Note: scrolling within the BioCircos chart activates zoom functionality", style="color:black; font-family: Verdana;"),
@@ -237,6 +257,24 @@ shinyUI(
                         
                       ),
                       
+                      br(),
+                      br(),
+                      br(),
+                      br(),
+                    
+                      fluidRow(sidebarPanel
+                               (width=12, id="sidebar_circos_bottom",
+                                 
+                      h1("The data tables below provide SNV, INDEL, and CN data from the selected donor:",
+                      style="text-align: left; font-size:23px;"))),
+                      
+        
+                      
+                      
+                      helpText("*Please note that low confidence mutations are defined as those that overlap with known polymorphisms 
+                         from dbSNP (build 51).", style="font-family: Verdana; padding: 10px;"),
+                      
+              
                      
                       
                       tags$h4("SNVs", style = "font-size: 25px; color: black; font-family: Verdana; padding: 20px;"),
@@ -302,13 +340,12 @@ shinyUI(
                       )),
                       
                       
-                  h2("The reactive data table below provides the opportunity to query SNV or INDEL data from multiple tumor samples:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; 
-                     padding: 10px; padding-left: 20px; color: black;"),
+                  h2("The reactive data table below provides the opportunity to query SNV or INDEL data from multiple tumor samples:" , style="font-family: Verdana; font-weight: bolder; font-size: 13pt; 
+                     padding: 10px; color: black;"),
                   
-                  br(), 
+                  h5("To view sequencing images for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image below.", 
+                     style="font-family: Verdana; font-size: 11.5pt; color: black; padding: 10px;"),
                   
-                  
-                  h5("Please note that low confidence mutations are defined as those ", style="font-family: Verdana; font-size: 11pt; color: black; padding: 10px;"),
                   
                   br(),
                       
@@ -324,7 +361,8 @@ shinyUI(
                                       br(),
                                       
                                       
-                                      helpText("This page allows for the exploration of mutation data through INDEL and SNV data"),
+                                      helpText("*Note: When querying large amounts of data, please be patient while the table is processing. 
+                                               When selecting all donors, this process can take some time:"),
                                       
                                       pickerInput("var", multiple=FALSE,
                                                   label = "Please click SNV or INDEL to view the data of your choosing: ",
@@ -334,6 +372,22 @@ shinyUI(
                                                   selected = "SNV"),
                                       
                                       
+                                      pickerInput("chrs", multiple=FALSE,
+                                                  label = "View all chromosomes, or make individual selections:",
+                                                  choices = c("All",
+                                                              "Select Chrs"),
+                                                  
+                                                  selected = "All"),
+                                      
+                                      
+                                      conditionalPanel(
+                                        
+                                       condition = "input.chrs == 'Select Chrs'",
+                                       
+                                       uiOutput("mutation_data_chr_picker")
+                                        
+                                      ),
+                                      
                                       pickerInput("type", multiple=FALSE,
                                                   
                                                   label = "View all samples, or make individual selections: ",
@@ -342,10 +396,7 @@ shinyUI(
                                                   selected = "All"
                                                   ),
                                       
-                                    
-                                
-                                      
-                                      # uiOutput("chr_selection_circos"), 
+                            
                                       
                                  
                                      conditionalPanel(
@@ -354,14 +405,19 @@ shinyUI(
                                   
                                       pickerInput("donor_choice_mutation", multiple=TRUE,
 
-                                                  label = "To make selections, please choose at least one donor to view the corresponding data: ",
+                                                  label = "Please choose at least one donor to view the corresponding data: ",
 
                                                   choices = c(sort(unique(d$donor_unique_id))),
+                                                  
+                                                  options = list(`actions-box` = TRUE),
 
                                                   selected = "BCH_001_S4FU683F_S7EH61A2")
                                       
-                                     )
-                                    
+                                     ),
+                                     
+                                     helpText("*Please note that low confidence mutations are defined as those that overlap with 
+                                              known polymorphisms from dbSNP (build 51).")
+                        
                         ),
                         
                         
@@ -370,11 +426,33 @@ shinyUI(
                         
                         mainPanel(
                           
-                          div(dataTableOutput("selected_mutation"), style = 'overflow-x: scroll; font-size: 83%; width = 69%'),
                           
-                          uiOutput("bamsnap_image")
+                          conditionalPanel(
+                          
+                          condition = "input.chrs == 'All'",
+                          
+                          div(dataTableOutput("selected_mutation_no_chr_sort"), 
+                              style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
+                          
+                          uiOutput("bamsnap_image_selected_all")
+                          
+                          
+                          
+                          ),
+                          
+                          conditionalPanel(
+                            
+                          condition = "input.chrs == 'Select Chrs'",
+                          
+                          div(dataTableOutput("selected_mutation_chr_sort"), 
+                              style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
+                          
+                          uiOutput("bamsnap_image_selected_chrs")
+                          )
+                          
+                          
                         
-                        
+                          
                         )
                       )
                       
@@ -386,7 +464,7 @@ shinyUI(
              tabPanel("cBioPortal",
                       
                       h2("By clicking on this image, you will arrive at a private instance of cBioPortal containing curated CN, 
-                         SNV, survival data and more:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; 
+                         SNV, survival data and more:" , style="font-family: Verdana; font-weight: bolder; font-size: 12pt; 
                          padding: 10px; padding-left: 20px; color: black;"),
                       
                       br(), 
