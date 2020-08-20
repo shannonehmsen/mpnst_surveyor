@@ -28,7 +28,7 @@ COPY mpnst_app/ /srv/shiny-server/mpnst_app
 
 #download BioCircos package (modified for hg38 genome build)
 
-RUN R CMD INSTALL /srv/shinyapps/app/dist/BioCircos.tar.gz
+RUN R CMD INSTALL /srv/shiny-server/mpnst_app/dist/BioCircos.tar.gz
 
 RUN  echo 'install.packages(c("shiny", "shinyWidgets", "shinydashboard"),\
            repos="http://cran.us.r-project.org", \
