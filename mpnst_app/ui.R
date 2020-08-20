@@ -13,7 +13,6 @@ library(shiny)
 library(shinydashboard)
 library(DT)
 library(shinythemes)
-library(shinydashboardPlus)
 library(shinyWidgets)
 library(shinycssloaders)
 library(ggplot2)
@@ -25,12 +24,11 @@ library(RColorBrewer)
 
 
 shinyUI(
-  navbarPage(fluid =TRUE, position = c("static-top"), 
+  navbarPage(fluid =TRUE, position = c("static-top"), id = "nav_bar_page",
              
              "MPNST Surveyor", theme = shinytheme("cerulean"),
              
-          
-             
+        
              
              tabPanel("HOME",
                       
@@ -51,7 +49,7 @@ shinyUI(
                       
                       
                       div(class = "home_page",
-                          includeHTML("footer.html")
+                          includeHTML("home_page.html")
                       )
                 
                    
@@ -60,11 +58,11 @@ shinyUI(
                
                "SAMPLES",
                
-               h2("This data table displays clinical and genomic information about the patients in the GeM cohort:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; color: black;"),
+               h2("This data table displays clinical and genomic information about the patients in the GeM cohort:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; color: black; padding: 10px"),
                
                br(),
                
-               h5("Please use the filter boxes to refine your search.", style="font-family: Verdana; font-size: 11pt; color: black;"),
+               h5("Please use the filter boxes to refine your search.", style="font-family: Verdana; font-size: 11pt; color: black; padding: 10px;"),
                
                br(),
                
@@ -74,8 +72,9 @@ shinyUI(
              
              tabPanel("EXPLORE", id="biocircos_panel",
                       
+                    div(style = 'overflow-x: scroll;',
                       
-                      fluidRow(sidebarPanel
+                        fluidRow(sidebarPanel
                       (width=12, id="sidebar_circos_top",
                       
                       h1("Interactive circos plots reporting SNVs, 
@@ -280,7 +279,7 @@ shinyUI(
                                         
                                       ))
                       )
-                      
+             )
           
              ),
              
@@ -303,7 +302,15 @@ shinyUI(
                       )),
                       
                       
-                      
+                  h2("The reactive data table below provides the opportunity to query SNV or INDEL data from multiple tumor samples:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; 
+                     padding: 10px; padding-left: 20px; color: black;"),
+                  
+                  br(), 
+                  
+                  
+                  h5("Please note that low confidence mutations are defined as those ", style="font-family: Verdana; font-size: 11pt; color: black; padding: 10px;"),
+                  
+                  br(),
                       
                       sidebarLayout(
                         
@@ -378,16 +385,26 @@ shinyUI(
              ),
              tabPanel("cBioPortal",
                       
-                    
+                      h2("By clicking on this image, you will arrive at a private instance of cBioPortal containing curated CN, 
+                         SNV, survival data and more:" , style="font-family: Verdana; font-weight: bolder; font-size: 11pt; 
+                         padding: 10px; padding-left: 20px; color: black;"),
+                      
+                      br(), 
                              
                              tags$a(
                                href="https://www.cbioportal.org/study/summary?id=mpnst_mskcc", 
                                tags$img(src="cbioportal_logo.png", 
                                        
-                                        width="850",
-                                        height="310")
+                                        width="730",
+                                        height="265")
                              )
-                      )
+                      ),
+             
+             div(class = "footer",
+                 includeHTML("footer.html")
+             ),
+             
+             tags$style(type="text/css", "body {padding-bottom: 225px;}")
              
   )
 

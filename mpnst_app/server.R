@@ -206,6 +206,13 @@ function(input, output, session) {
     
     sample_data_table <- read.delim('combined_sample_table_genomic_clinical_data.txt')
     
+    
+    ## sets up which columns in sample_data_table to keep 
+    
+    #columns_to_keep <- c("Subject.ID","gender","NF.Status.x")
+    
+    #sample_data_table <- sample_data_table[columns_to_keep]
+    
     #describes the output of the function "sampletable", which renders a data table using 
     #the file "firsttabledata"
     
@@ -348,9 +355,9 @@ function(input, output, session) {
     
       ## concatenate the call to file to pull the sequencing image 
       
-      sequencing_image <- paste0("./",bamsnap_folder,"./",donor_id_from_column,"/",chr_number,"_",chr_location_value,".png")
+      sequencing_image <- paste0("/",bamsnap_folder,"/",donor_id_from_column,"/",chr_number,"_",chr_location_value,".png")
                          
-      #print(sequencing_image)
+      print(sequencing_image)
       
   
       tags$img(src= sequencing_image)
