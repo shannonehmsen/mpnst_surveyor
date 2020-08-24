@@ -2,21 +2,18 @@ FROM rocker/shiny-verse:latest
 
 # install necessary libraries
 
-RUN apt-get update && apt-get install -y \
-    sudo \
+RUN sudo apt-get update && apt-get install -y \
     nano \
     libssl-dev \
-    libssh2-1-dev
+    libxml2-dev
 
 
 # install necessary R packages
+RUN  echo 'install.packages(c("DT", "shinyjs", "ggplot2", "plyr", "RColorBrewer", "shinythemes", "data.table", "htmlwidgets"),\
+           repos="http://cran.us.r-project.org", \
+           dependencies=TRUE)' \
+           > /tmp/packages.R && Rscript /tmp/packages.R
 
-
-RUN R -e "install.packages('plyr', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('shinythemes', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('DT', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('ggplot2', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('RColorBrewer', repos='http://cran.rstudio.com/')"
 
 RUN R -e "install.packages(c('devtools'), dependencies=TRUE)"
 RUN R -e "devtools::install_github('andrewsali/shinycssloaders')"
@@ -24,11 +21,11 @@ RUN R -e "devtools::install_github('dreamRs/shinyWidgets')"
 
 # copy mpnst_app to the image
 
-COPY mpnst_app/ /srv/shiny-server/mpnst_app
+COPY mpnst_app/ /srv/shinyapps/mpnst_app
 
 #download BioCircos package (modified for hg38 genome build)
 
-RUN R CMD INSTALL /srv/shiny-server/mpnst_app/dist/BioCircos.tar.gz
+RUN R CMD INSTALL /srv/shinyapps/mpnst_app/dist/BioCircos.tar.gz
 
 RUN  echo 'install.packages(c("shiny", "shinyWidgets", "shinydashboard"),\
            repos="http://cran.us.r-project.org", \
@@ -39,14 +36,7 @@ RUN  echo 'install.packages(c("shiny", "shinyWidgets", "shinydashboard"),\
 # select port
 EXPOSE 8000
 
-# allow permission
-# RUN sudo chown -R shiny:shiny /srv/shiny-server
 
 # run app
- CMD ["R", "-e", "shiny::runApp('/srv/shiny-server/mpnst_app', 8000, host='0.0.0.0')"]
+ CMD ["R", "-e", "shiny::runApp('/srv/shinyapps/mpnst_app', 8000, host='0.0.0.0')"]
 
-# allow permission
-RUN sudo chown -R shiny:shiny /srv/shiny-server
-
-# run app
-CMD ["R", "-e", "shiny::runApp('/srv/shiny-server/mpnst_app', 3838, host='0.0.0.0')"]

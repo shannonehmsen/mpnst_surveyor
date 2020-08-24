@@ -293,6 +293,10 @@ shinyUI(
                                       ),
                                       
                                       
+                                      h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
+                                         style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
+                                      
+                                      
                                       div(id="bamsnap_image_snv_div",       
                                           uiOutput("bamsnap_SNV_explore")
                                       ),
@@ -334,6 +338,10 @@ shinyUI(
                                         inputId = "show_bamsnap_image_indel",
                                         label = "Show Raw Sequencing Read"
                                       ),
+                                      
+                                      
+                                      h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
+                                         style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
                                       
                                       
                                       div(id="bamsnap_image_indel_div",       
@@ -385,10 +393,10 @@ shinyUI(
                       )),
                       
                       
-                  h2("The reactive data table below provides the opportunity to query SNV or INDEL data from multiple tumor samples:" , style="font-family: Verdana; font-weight: bolder; font-size: 13pt; 
+                  h2("The reactive data table below provides the opportunity to query SNV or INDEL data from multiple tumor samples" , style="font-family: Verdana; font-weight: bolder; font-size: 13pt; 
                      padding: 10px; color: black;"),
                   
-                  h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image below:", 
+                  h5("Select a cell in the 'Start' column of the data table to view a raw sequencing read below:", 
                      style="font-family: Verdana; font-size: 11.5pt; color: black; padding: 10px;"),
                   
                   
@@ -485,6 +493,8 @@ shinyUI(
                           div(dataTableOutput("selected_mutation_all_chr"), 
                               style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
                           
+                          br(),
+                          
                           
                           actionButton(
                             inputId = "clear_bamsnap_image_all",
@@ -496,6 +506,10 @@ shinyUI(
                             inputId = "show_bamsnap_image_all",
                             label = "Show Raw Sequencing Read"
                           ),
+                          
+                          
+                          h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
+                             style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
                           
                           
                           div(id="bamsnap_image_selected_all_div",       
@@ -515,6 +529,8 @@ shinyUI(
                           div(dataTableOutput("selected_mutation_chr_sort"), 
                               style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
                           
+                          br(),
+                          
                           actionButton(
                             inputId = "clear_bamsnap_image_chr",
                             label = "Clear Raw Sequencing Read"
@@ -524,6 +540,9 @@ shinyUI(
                             inputId = "show_bamsnap_image_chr",
                             label = "Show Raw Sequencing Read"
                           ),
+                          
+                          h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
+                             style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
                           
                               
                          div(id="bamsnap_image_selected_chrs_div",       
@@ -535,10 +554,7 @@ shinyUI(
                              )
                          
                          
-                        )  
-                          
-                        
-                          
+                          )  
                         )
                       )
                       
@@ -553,9 +569,9 @@ shinyUI(
                          SNV, survival data and more:" , style="font-family: Verdana; font-weight: bolder; font-size: 12pt; 
                          padding: 10px; padding-left: 20px; color: black;"),
                       
-                      h4("Copy-number in cBioPortal is according to GISTIC 2.0. Values: -2 = homozygous deletion; 
+                      h3("Copy-number in cBioPortal is according to GISTIC 2.0. Values: -2 = homozygous deletion; 
                                -1 = hemizygous deletion; 0 = neutral / no change; 1 = gain; 2 = high level amplification.", 
-                         style="font-family: Verdana; font-size: 11pt; padding: 10px; padding-left: 20px; color: black;"),
+                         style="font-family: Verdana; font-size: 9pt; padding: 10px; padding-left: 20px; color: black;"),
                       
                       br(), 
                              
