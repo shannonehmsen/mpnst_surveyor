@@ -21,25 +21,7 @@ library(RColorBrewer)
 source("load_data.R")
 
 
-
-##attaching these calls from load_data.R 
-
-calls_all=read.delim("combined_sample_table_genomic_clinical_data.txt")
-d = calls_all
-d$donor_unique_id = as.vector(d$donor_unique_id)
-# # clinical data
-clinical = read.delim("combined_sample_table_genomic_clinical_data.txt")
-clinical$percentage_cellularity = NULL
-clinical$level_of_cellularity = NULL
-clinical$tcga_expert_re.review = NULL
-clinical$response <- NULL
-clinical$event <- NULL
-clinical$code <- NULL
-clinical$tissue <- NULL
-clinical$percentage_cellularity <- NULL
-clinical$project_code <- NULL
-clinical$donor_wgs_included_excluded = NULL
-names(clinical)[2]="donor_unique_id"
+### shiny UI page 
 
 
 shinyUI(
@@ -51,6 +33,8 @@ shinyUI(
              
              tabPanel("HOME",
                       
+                      ## sets background color to a gradient from white on top to light blue on the bottom
+                      
                       setBackgroundColor(
                         color = c("#FFFFFF", "#EFFFFF"),
                         gradient = "linear",
@@ -60,11 +44,12 @@ shinyUI(
                     
                       #<link rel="stylesheet" type="text/css" href="footer.css" media="screen"/>
                       
-                      #ensures that each header is set as the same style font 
+                      #ensures that each h1 header is set as the same style font 
                       
                       tags$head(tags$style('h1 {color: black; font-family: Verdana}')),
                       
                       
+                      ## attached HTML and CSS document for the homepage
                       
                       
                       div(class = "home_page",
@@ -101,7 +86,7 @@ shinyUI(
                           style="text-align: center; font-size:26px;"))),
                       
                       
-                      ### HTML commands to change the background color of the side panels 
+                      ### HTML commands to change the background color of the side panels
                       
                       
                       tags$head(tags$style(
@@ -130,6 +115,10 @@ shinyUI(
                         #	 shiny::column(3,
                         sidebarPanel(width=3, id="sidebar_circos",
                                      wellPanel(id="wellPanel_circos",
+                                               
+                                               
+                                       helpText("*Please be patient, as the circos plots take time to render hypermutated samples.", style="font-family: Verdana; padding: 10px;"),        
+                                               
                                   
                                        uiOutput("donor_choice"),
                                        uiOutput("chr_selection_circos"),
@@ -141,6 +130,8 @@ shinyUI(
                                        #fluidRow(
                                        
                                        #sidebarPanel(width=3,
+                                       
+                                       
                                        h5("Circos plot options*",style="font-weight: bold;"),
                                        checkboxInput( inputId='show_patho_indels', label='Show pathogenic indels',value = FALSE),
                                        checkboxInput( inputId='show_nopatho_indels', label='Show non-pathogenic indels',value = FALSE),
@@ -261,18 +252,17 @@ shinyUI(
                       br(),
                       br(),
                       br(),
-                    
-                      fluidRow(sidebarPanel
-                               (width=12, id="sidebar_circos_bottom",
+                      br(),
+            
                                  
-                      h1("The data tables below provide SNV, INDEL, and CN data from the selected donor:",
-                      style="text-align: left; font-size:23px;"))),
+                      tags$h1("The data tables below provide SNV, INDEL, and CN data from the selected donor:",
+                      style="text-align: left; font-size:26px;"),
                       
         
                       
                       
                       helpText("*Please note that low confidence mutations are defined as those that overlap with known polymorphisms 
-                         from dbSNP (build 51).", style="font-family: Verdana; padding: 10px;"),
+                         from dbSNP (build 51).", style="font-family: Verdana; padding: 11px;"),
                       
               
                      
@@ -285,11 +275,42 @@ shinyUI(
                                         div(
                                           DT::dataTableOutput("table_SNVs"), style = "overflow-x: scroll; padding: 25px; font-size: 83%; width = 70%;")
                                         
-                                      ))
+                                         
+                                      
+                                      ),
+                                      
+                                      ## offers the user opportunity to clear the bamsnap image below snv table 
+                                      
+                                      actionButton(
+                                        inputId = "clear_bamsnap_image_snv",
+                                        label = "Clear Raw Sequencing Read",
+                                        
+                                      ),
+                                      
+                                      actionButton(
+                                        inputId = "show_bamsnap_image_snv",
+                                        label = "Show Raw Sequencing Read"
+                                      ),
+                                      
+                                      
+                                      div(id="bamsnap_image_snv_div",       
+                                          uiOutput("bamsnap_SNV_explore")
+                                      ),
+                                      
+                                      div(id="snv_div",
+                                          
+                                      )
+                                
+                              )
+
                       ),
                       
                       br(),
                       br(),
+                      
+                 
+                                    
+                                         
                       
                       tags$h4("INDELs", style = "font-size: 25px; color: black; font-family: Verdana; padding: 20px;"),
                       fluidRow( #sidebarPanel(width=12,
@@ -297,9 +318,33 @@ shinyUI(
                                       
                                       div(
                                         div(
-                                          DT::dataTableOutput("table_INDELs"), style = "overflow-x: scroll; padding: 25px; font-size: 83%; width = 70%;")
-                                        
-                                      ))
+                                          
+                                          DT::dataTableOutput("table_INDELs"), style = "overflow-x: scroll; padding: 25px; font-size: 83%; width = 70%;"),
+                                  
+                                      ),
+                                      
+                                      
+                                      actionButton(
+                                        inputId = "clear_bamsnap_image_indel",
+                                        label = "Clear Raw Sequencing Read",
+                                      
+                                      ),
+                                      
+                                      actionButton(
+                                        inputId = "show_bamsnap_image_indel",
+                                        label = "Show Raw Sequencing Read"
+                                      ),
+                                      
+                                      
+                                      div(id="bamsnap_image_indel_div",       
+                                          uiOutput("bamsnap_INDEL_explore")
+                                      ),
+                                      
+                                      div(id="indel_div",
+                                          
+                                      )
+                                      
+                                      )
                       ),
                       
                       br(),
@@ -343,7 +388,7 @@ shinyUI(
                   h2("The reactive data table below provides the opportunity to query SNV or INDEL data from multiple tumor samples:" , style="font-family: Verdana; font-weight: bolder; font-size: 13pt; 
                      padding: 10px; color: black;"),
                   
-                  h5("To view sequencing images for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image below.", 
+                  h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image below:", 
                      style="font-family: Verdana; font-size: 11.5pt; color: black; padding: 10px;"),
                   
                   
@@ -360,9 +405,6 @@ shinyUI(
                                       
                                       br(),
                                       
-                                      
-                                      helpText("*Note: When querying large amounts of data, please be patient while the table is processing. 
-                                               When selecting all donors, this process can take some time:"),
                                       
                                       pickerInput("var", multiple=FALSE,
                                                   label = "Please click SNV or INDEL to view the data of your choosing: ",
@@ -388,12 +430,16 @@ shinyUI(
                                         
                                       ),
                                       
+                                      
+                                      helpText("*Note: When querying large amounts of data, please be patient while the table is processing,
+                                               especially when viewing all donors."),
+                                      
                                       pickerInput("type", multiple=FALSE,
                                                   
                                                   label = "View all samples, or make individual selections: ",
                                                   choices = c("All","Select Donors"),
                                                   
-                                                  selected = "All"
+                                                  selected = "Select Donors"
                                                   ),
                                       
                             
@@ -409,10 +455,15 @@ shinyUI(
 
                                                   choices = c(sort(unique(d$donor_unique_id))),
                                                   
-                                                  options = list(`actions-box` = TRUE),
+                                                  options = list(deselectAllText = TRUE, selectAllText = FALSE),
 
                                                   selected = "BCH_001_S4FU683F_S7EH61A2")
                                       
+                                     ),
+                                     
+                                     actionButton(
+                                       inputId = "clear_donor_selections",
+                                       label = "Reset Donors"
                                      ),
                                      
                                      helpText("*Please note that low confidence mutations are defined as those that overlap with 
@@ -431,12 +482,29 @@ shinyUI(
                           
                           condition = "input.chrs == 'All'",
                           
-                          div(dataTableOutput("selected_mutation_no_chr_sort"), 
+                          div(dataTableOutput("selected_mutation_all_chr"), 
                               style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
                           
-                          uiOutput("bamsnap_image_selected_all")
+                          
+                          actionButton(
+                            inputId = "clear_bamsnap_image_all",
+                            label = "Clear Raw Sequencing Read",
+                           # style="color: #fff; background-color: #e95420"
+                          ),
+                          
+                          actionButton(
+                            inputId = "show_bamsnap_image_all",
+                            label = "Show Raw Sequencing Read"
+                          ),
                           
                           
+                          div(id="bamsnap_image_selected_all_div",       
+                              uiOutput("bamsnap_image_selected_all")
+                          ),
+                          
+                          div(id="all_div",
+                              
+                              )
                           
                           ),
                           
@@ -447,9 +515,27 @@ shinyUI(
                           div(dataTableOutput("selected_mutation_chr_sort"), 
                               style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
                           
-                          uiOutput("bamsnap_image_selected_chrs")
-                          )
+                          actionButton(
+                            inputId = "clear_bamsnap_image_chr",
+                            label = "Clear Raw Sequencing Read"
+                          ),
                           
+                          actionButton(
+                            inputId = "show_bamsnap_image_chr",
+                            label = "Show Raw Sequencing Read"
+                          ),
+                          
+                              
+                         div(id="bamsnap_image_selected_chrs_div",       
+                          uiOutput("bamsnap_image_selected_chrs")
+                         ),
+                         
+                         div(id="chr_div",
+                        
+                             )
+                         
+                         
+                        )  
                           
                         
                           
@@ -466,6 +552,10 @@ shinyUI(
                       h2("By clicking on this image, you will arrive at a private instance of cBioPortal containing curated CN, 
                          SNV, survival data and more:" , style="font-family: Verdana; font-weight: bolder; font-size: 12pt; 
                          padding: 10px; padding-left: 20px; color: black;"),
+                      
+                      h4("Copy-number in cBioPortal is according to GISTIC 2.0. Values: -2 = homozygous deletion; 
+                               -1 = hemizygous deletion; 0 = neutral / no change; 1 = gain; 2 = high level amplification.", 
+                         style="font-family: Verdana; font-size: 11pt; padding: 10px; padding-left: 20px; color: black;"),
                       
                       br(), 
                              

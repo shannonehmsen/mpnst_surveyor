@@ -1,9 +1,11 @@
 #calls_all=readRDS("calls_all_with_all_info_server.rds")
 #calls_all=readRDS("calls_all_with_all_info_server_w_fn.rds")
-
-calls_all=read.delim("combined_sample_table_genomic_clinical_data.txt")
 #calls_all = readRDS("calls_all_with_all_info.rds")
+
+calls_all=read.delim("combined_sample_genomic_table.txt")
+
 d = calls_all
+
 #d$SV_sample = d['SV calls file']
 #d$SV_sample = as.vector(unlist(d$SV_sample))
 #d$CNV = d['SCNA calls file']
@@ -20,13 +22,13 @@ d = calls_all
 #print(d$SV_sample)
 
 # for (i in 1:ncol(d)){
-# 
+#
 #   if (is.numeric(d[,i])){
-# 
+#
 #     d[,i] = round(d[,i],digits=3)
-# 
+#
 #   }
-# 
+#
 # }
 
 #d$histo = as.vector(d$histo)
@@ -34,7 +36,7 @@ d$donor_unique_id = as.vector(d$donor_unique_id)
 
 # d$chromo_binary="No"
 # d$chromo_binary[which(d$chromo==1)] = "Yes"
-# 
+#
 # d$type_chromo = as.vector(d$type_chromo)
 # d$type_chromo[which(d$type_chromo == "NA")] = "No chromothripsis"
 
@@ -52,7 +54,7 @@ d$donor_unique_id = as.vector(d$donor_unique_id)
 # d$donor_tumour_staging_system_at_diagnosis <- NULL
 # d$stage_backup <- NULL
 # d$metastasis <- NULL
-# 
+#
 # d$donor_sex         <- NULL
 # d$donor_vital_status      <- NULL
 # #d$donor_age_at_diagnosis    <- NULL
@@ -74,9 +76,9 @@ d$donor_unique_id = as.vector(d$donor_unique_id)
 # d$metastasis <- NULL
 
 
-# 
-# # clinical data
-clinical = read.delim("combined_sample_table_genomic_clinical_data.txt")
+
+# clinical data
+clinical = read.delim("combined_sample_genomic_table.txt")
 clinical$percentage_cellularity = NULL
 clinical$level_of_cellularity = NULL
 clinical$tcga_expert_re.review = NULL
