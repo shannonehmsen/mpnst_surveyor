@@ -527,8 +527,11 @@ function(input, output, session) {
           # 	  }
           # 	  return(mm)
           	  
+          	  
+          	  ### read in file containing all the respective snv/indel samples 
+          	  
              }    else {
-          
+                       
                      input_file_mutation_all <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_all_samples.rds")
                      
                      print(input_file_mutation_all)
@@ -538,8 +541,10 @@ function(input, output, session) {
                      rownames(nn) = 1:nrow(nn)
                     
                      return(nn)
+                     
+                     }
           
-                   }
+                   
 	      })
     
     
