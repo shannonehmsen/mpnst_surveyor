@@ -9,25 +9,25 @@
  Deployed on AWS EC2 instance, instructions below ---
  
  
- Prerequisites: 
+ # Prerequisites: 
  
  docker 
  
  Set Up: 
  
- # clone repository from github 
+ #clone repository from github 
  
  git clone https://github.com/colinmiller20/mpnst_surveyor.git
  
- # enter working directory of the repo 
+ #enter working directory of the repo 
  
  cd mpnst_surveyor 
  
- # create docker image from within mpnst_surveyor directory 
+ #create docker image from within mpnst_surveyor directory 
  
  docker build -t mpnst_app . 
  
- # after container 'mpnst_app' is built, add in the necessary data files as volumes 
+ #after container 'mpnst_app' is built, add in the necessary data files as volumes 
  
  - Data volumes to have on instance (available on EBI Cluster) 
  
@@ -35,7 +35,7 @@
  - bamsnap_SNV.tar.gz
  - consensus_SNV_all_samples.rds 
  
-# unpack tar files 
+#unpack tar files 
 
  tar -xvf bamsnap_INDEL.tar.gz
  tar -xvf bamsnap_SNV.tar.gz
@@ -45,7 +45,7 @@
  
  ------------------------------------
  
- # docker command to add volumes and run
+ #docker command to add volumes and run
  
  sudo docker container run -d -p 8000:8000 \
 -v /home/ubuntu/mpnst_surveyor/mpnst_app/:/srv/shinyapps/mpnst_app \
