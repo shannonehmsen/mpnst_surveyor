@@ -38,7 +38,9 @@
 #unpack tar files 
 
  tar -xvf bamsnap_INDEL.tar.gz
+ 
  tar -xvf bamsnap_SNV.tar.gz
+ 
  tar -xvf consensus_SNV_all_samples.rds
  
  leave these files in home directory /home/ubuntu or adjust next statement 
@@ -47,13 +49,14 @@
  
  #docker command to add volumes and run
  
- sudo docker container run -d -p 8000:8000 \
--v /home/ubuntu/mpnst_surveyor/mpnst_app/:/srv/shinyapps/mpnst_app \
--v /home/ubuntu/bamsnap_SNV/:/srv/shinyapps/mpnst_app/www/
--v /home/ubuntu/bamsnap_INDEL/:/srv/shinyapps/mpnst_app/www/
--v /home/ubuntu/consensus_SNV_all_samples.rds/:/srv/shinyapps/mpnst_app/consensus_SNV_ind/
+sudo docker container run -d -p 8000:8000 \
+-v /home/ubuntu/mpnst_surveyor/mpnst_app/:/srv/shinyapps/mpnst_app/ \
+-v /home/ubuntu/bamsnap_SNV/:/srv/shinyapps/mpnst_app/www/SNV_reads/ \ 
+-v /home/ubuntu/bamsnap_INDEL/:/srv/shinyapps/mpnst_app/www/INDEL_reads/ \
+-v /home/ubuntu/consensus_SNV_all_samples.rds:/srv/shinyapps/mpnst_app/consensus_SNV_ind/ \ 
 -v /home/ubuntu/log/shiny-server/:/var/log/shiny-server/ \
 mpnst_app
+
 
 
 
