@@ -576,7 +576,7 @@ shinyUI(
                       br(), 
                              
                              tags$a(
-                               href="https://www.cbioportal.org/study/summary?id=mpnst_mskcc", 
+                               href="http://18.206.76.181:8081/", 
                                tags$img(src="cbioportal_logo.png", 
                                        
                                         width="730",
