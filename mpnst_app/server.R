@@ -339,7 +339,7 @@ function(input, output, session) {
       
       ## concatenate the call to file to pull the sequencing image
       
-      sequencing_image_snv <- paste0("/bamsnap_SNV/",donor,"/",chr_number_snv,"_",chr_location_value_snv,".png")
+      sequencing_image_snv <- paste0("/SNV_reads/bamsnap_SNV/",donor,"/",chr_number_snv,"_",chr_location_value_snv,".png")
       
       print(sequencing_image_snv)
       
@@ -413,7 +413,7 @@ function(input, output, session) {
               
               ## concatenate the call to file to pull the sequencing image
               
-              sequencing_image_indel <- paste0("/bamsnap_INDEL/",donor,"/",chr_number_indel,"_",chr_location_value_indel,".png")
+              sequencing_image_indel <- paste0("/INDEL_reads/bamsnap_INDEL/",donor,"/",chr_number_indel,"_",chr_location_value_indel,".png")
               
               print(sequencing_image_indel)
               
@@ -743,14 +743,18 @@ function(input, output, session) {
               donor_id_from_column = mutation_data_table()[input$selected_mutation_all_chr_cell_clicked$row,which(colnames(mutation_data_table())=="sample")]
               
               
+              
               bamsnap_folder = paste0("bamsnap_",input$var)
               
+              ## create a higher folder to hold SNV/INDEL reads so that volume can be linked to Docker image 
               
+              reads_folder = paste0(input$var,"_reads")
               
               ## concatenate the call to file to pull the sequencing image 
               
-              sequencing_image <- paste0("/",bamsnap_folder,"/",donor_id_from_column,"/",chr_number,"_",chr_location_value,".png")
+              sequencing_image <- paste0("/",reads_folder,"/",bamsnap_folder,"/",donor_id_from_column,"/",chr_number,"_",chr_location_value,".png")
               
+              print(sequencing_image)
               
               ## renders the sequencing image, and makes sure there is not a 'broken image' icon before the user selects an image
               
@@ -820,10 +824,13 @@ function(input, output, session) {
               
               bamsnap_folder_1 = paste0("bamsnap_",input$var)
               
+              ## a folder to hold the bamsnap folder such that both SNV_reads and INDEL_reads can be linked via Docker volumes 
+              
+              reads_folder_1 = paste0(input$var,"_reads")
               
               ## concatenate the call to file to pull the sequencing image
               
-              sequencing_image_1 <- paste0("/",bamsnap_folder_1,"/",donor_id_from_column_1,"/",chr_number_1,"_",chr_location_value_1,".png")
+              sequencing_image_1 <- paste0("/",reads_folder_1,"/",bamsnap_folder_1,"/",donor_id_from_column_1,"/",chr_number_1,"_",chr_location_value_1,".png")
               
               ## renders the sequencing image, and makes sure there is not a 'broken image' icon before the user selects an image
               

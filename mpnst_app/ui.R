@@ -571,7 +571,7 @@ shinyUI(
                       
                       h3("Copy-number in cBioPortal is according to GISTIC 2.0. Values: -2 = homozygous deletion; 
                                -1 = hemizygous deletion; 0 = neutral / no change; 1 = gain; 2 = high level amplification.", 
-                         style="font-family: Verdana; font-size: 9pt; padding: 10px; padding-left: 20px; color: black;"),
+                         style="font-family: Verdana; font-size: 10pt; padding: 10px; padding-left: 20px; color: black;"),
                       
                       br(), 
                              
