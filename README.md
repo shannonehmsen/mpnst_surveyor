@@ -17,7 +17,7 @@
  
  #clone repository from github 
  
- git clone https://github.com/colinmiller20/mpnst_surveyor.git
+ git clone https://github.com/parklab/mpnst_surveyor.git
  
  #enter working directory of the repo 
  
