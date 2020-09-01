@@ -52,16 +52,16 @@
  #docker command to add volumes and run on port 8000: 
  (may have to copy each line individually) 
  
-sudo docker run -it –rm -p 8000:8000 \
--v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \
--v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \
+sudo docker run -it –rm -p 8000:8000 \\
+-v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \\
+-v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \\
 mpnst_app
 
 #(OR) docker command to deploy to port 80
 
-sudo docker run -it –rm -p 80:8000 \
--v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \
--v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \
+sudo docker run -it –rm -p 80:8000 \\
+-v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \\
+-v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \\
 mpnst_app
 
 
