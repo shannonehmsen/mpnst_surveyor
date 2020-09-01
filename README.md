@@ -29,7 +29,7 @@
  
  #after container 'mpnst_app' is built, add in the necessary data files as volumes 
  
- - Data volumes to have on instance (available on EBI Cluster) 
+ Data volumes to have on instance (available on EBI Cluster) 
  
  - bamsnap_INDEL.tar.gz
  - bamsnap_SNV.tar.gz
