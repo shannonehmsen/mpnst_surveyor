@@ -13,7 +13,7 @@
  
  docker 
  
- Set Up: 
+ # Set Up: 
  
  #clone repository from github 
  
@@ -35,7 +35,7 @@
  - bamsnap_SNV.tar.gz
  - consensus_SNV_all_samples.rds 
  
-#unpack tar files 
+# Unpack tar files 
 
  tar -xvf bamsnap_INDEL.tar.gz
  
@@ -46,6 +46,8 @@
  leave these directories in home directory /home/ubuntu or adjust next statement for dir location 
  
  ------------------------------------
+ 
+ # Run with Docker
  
  #docker command to add volumes and run on port 8000: 
  (may have to copy each line individually) 
@@ -63,6 +65,16 @@ sudo docker run -it –rm -p 80:8000 \
 mpnst_app
 
 
+
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
 
 
 
