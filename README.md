@@ -43,19 +43,25 @@
  
  tar -xvf consensus_SNV_all_samples.rds
  
- leave these files in home directory /home/ubuntu or adjust next statement 
+ leave these directories in home directory /home/ubuntu or adjust next statement for dir location 
  
  ------------------------------------
  
- #docker command to add volumes and run
+ #docker command to add volumes and run on port 8000: 
+ (may have to copy each line individually) 
  
-sudo docker container run -d -p 8000:8000 \
--v /home/ubuntu/mpnst_surveyor/mpnst_app/:/srv/shinyapps/mpnst_app/ \
--v /home/ubuntu/bamsnap_SNV/:/srv/shinyapps/mpnst_app/www/SNV_reads/ \ 
--v /home/ubuntu/bamsnap_INDEL/:/srv/shinyapps/mpnst_app/www/INDEL_reads/ \
--v /home/ubuntu/consensus_SNV_all_samples.rds:/srv/shinyapps/mpnst_app/consensus_SNV_ind/ \ 
--v /home/ubuntu/log/shiny-server/:/var/log/shiny-server/ \
+sudo docker run -it –rm -p 8000:8000 \
+-v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \
+-v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \
 mpnst_app
+
+#(OR) docker command to deploy to port 80
+
+sudo docker run -it –rm -p 80:8000 \
+-v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \
+-v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \
+mpnst_app
+
 
 
 
