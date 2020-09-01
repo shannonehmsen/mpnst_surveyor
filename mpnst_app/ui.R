@@ -442,20 +442,9 @@ shinyUI(
                                       helpText("*Note: When querying large amounts of data, please be patient while the table is processing,
                                                especially when viewing all donors."),
                                       
-                                      pickerInput("type", multiple=FALSE,
-                                                  
-                                                  label = "View all samples, or make individual selections: ",
-                                                  choices = c("All","Select Donors"),
-                                                  
-                                                  selected = "Select Donors"
-                                                  ),
-                                      
-                            
                                       
                                  
-                                     conditionalPanel(
-                                       
-                                      condition = "input.type == 'Select Donors'",
+                                      ## drop down menu for the user to choose which samples to view 
                                   
                                       pickerInput("donor_choice_mutation", multiple=TRUE,
 
@@ -463,16 +452,16 @@ shinyUI(
 
                                                   choices = c(sort(unique(d$donor_unique_id))),
                                                   
-                                                  options = list(deselectAllText = TRUE, selectAllText = FALSE),
+                                                  options = list(`actions-box` = TRUE),
 
-                                                  selected = "BCH_001_S4FU683F_S7EH61A2")
+                                                  selected = "BCH_001_S4FU683F_S7EH61A2"),
                                       
-                                     ),
+    
                                      
-                                     actionButton(
-                                       inputId = "clear_donor_selections",
-                                       label = "Reset Donors"
-                                     ),
+                                     # actionButton(
+                                     #   inputId = "clear_donor_selections",
+                                     #   label = "Reset Donors"
+                                     # ),
                                      
                                      helpText("*Please note that low confidence mutations are defined as those that overlap with 
                                               known polymorphisms from dbSNP (build 51).")

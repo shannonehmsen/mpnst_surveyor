@@ -95,3 +95,51 @@ names(clinical)[2]="donor_unique_id"
 #print("comment" %in% names(d))
 
 
+### load all_samples files for INDELs 
+
+
+# setwd("~/mpnst_surveyor/mpnst_app/consensus_INDEL_ind")
+# 
+# 
+# file_list <- list.files()
+# 
+# 
+# nn =c()
+# 
+# 
+# for(file in file_list){
+#   
+#   nn = rbind(nn, readRDS(file))
+#   
+# }
+# 
+# saveRDS(nn, file="consensus_INDEL_all_samples.rds")
+
+
+### load all_samples file for 
+
+
+# setwd("~/mpnst_surveyor/mpnst_app/consensus_SNV_ind")
+# 
+# 
+# file_list2 <- list.files()
+# 
+# 
+# nn =c()
+# 
+# 
+# for(file in file_list2){
+#   
+#   nn = rbind(nn, readRDS(file))
+#   
+# }
+# 
+# saveRDS(nn, file="consensus_SNV_all_samples.rds")
+# 
+# 
+# 
+# 
+# 
+# 
+# setwd("~/mpnst_surveyor/mpnst_app")
+

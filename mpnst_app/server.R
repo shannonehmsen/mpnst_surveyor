@@ -483,7 +483,7 @@ function(input, output, session) {
                 #input_donor_choice_mutation = as.vector( mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)] )
              
           
-              if(input$type=="Select Donors"){
+         
                 
               dons = c(); mm =c()
           
@@ -530,19 +530,19 @@ function(input, output, session) {
           	  
           	  ### read in file containing all the respective snv/indel samples 
           	  
-             }    else {
-                       
-                     input_file_mutation_all <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_all_samples.rds")
-                     
-                     print(input_file_mutation_all)
-          
-                     nn = readRDS(input_file_mutation_all)
-                     
-                     rownames(nn) = 1:nrow(nn)
-                    
-                     return(nn)
-                     
-                     }
+             # }    else {
+             #           
+             #         input_file_mutation_all <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_all_samples.rds")
+             #         
+             #         print(input_file_mutation_all)
+             # 
+             #         nn = readRDS(input_file_mutation_all)
+             #         
+             #         rownames(nn) = 1:nrow(nn)
+             #        
+             #         return(nn)
+             #         
+             #         }
           
                    
 	      })
@@ -561,13 +561,13 @@ function(input, output, session) {
     
     ## when action button to clear donor selections is pressed, updates the picker input to its originial display 
     
-    observeEvent(input$clear_donor_selections, {
-      updatePickerInput(
-        session, 
-        "donor_choice_mutation", 
-        selected = "BCH_001_S4FU683F_S7EH61A2"
-      )
-    })
+    # observeEvent(input$clear_donor_selections, {
+    #   updatePickerInput(
+    #     session, 
+    #     "donor_choice_mutation", 
+    #     selected = "BCH_001_S4FU683F_S7EH61A2"
+    #   )
+    # })
     
          
    #output of data_table for mutation data (snv/indels) 
