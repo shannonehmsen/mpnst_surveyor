@@ -59,9 +59,9 @@ mpnst_app
 
 #(OR) docker command to deploy to port 80
 
-sudo docker run -it –rm -p 80:8000 \\
--v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \\
--v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \\
+sudo docker run -it –rm -p 80:8000 \\ <br> 
+-v /home/ubuntu/bamsnap_SNV:/srv/shinyapps/mpnst_app/www/SNV_reads/bamsnap_SNV \\ <br> 
+-v /home/ubuntu/bamsnap_INDEL:/srv/shinyapps/mpnst_app/www/INDEL_reads/bamsnap_INDEL \\ <br> 
 mpnst_app
 
 
