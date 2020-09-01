@@ -565,7 +565,7 @@ shinyUI(
                       br(), 
                              
                              tags$a(
-                               href="http://18.206.76.181:8081/", 
+                               href="http://18.206.76.181:8080/", 
                                tags$img(src="cbioportal_logo.png", 
                                        
                                         width="730",
