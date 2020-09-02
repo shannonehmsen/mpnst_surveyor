@@ -11,21 +11,21 @@
  
  # Prerequisites: 
  
- docker 
- 
+- [docker](https://docs.docker.com/engine/installation/)
+
  # Set Up: 
  
  #clone repository from github 
  
- git clone https://github.com/parklab/mpnst_surveyor.git
+ - git clone https://github.com/parklab/mpnst_surveyor.git
  
  #enter working directory of the repo 
  
- cd mpnst_surveyor 
+ - cd mpnst_surveyor 
  
  #create docker image from within mpnst_surveyor directory 
  
- docker build -t mpnst_app . 
+ - docker build -t mpnst_app . 
  
  #after container 'mpnst_app' is built, add in the necessary data files as volumes 
  
@@ -37,11 +37,11 @@
  
 # Unpack tar files 
 
- tar -xvf bamsnap_INDEL.tar.gz
+ - tar -xvf bamsnap_INDEL.tar.gz
  
- tar -xvf bamsnap_SNV.tar.gz
+ - tar -xvf bamsnap_SNV.tar.gz
  
- tar -xvf consensus_SNV_all_samples.rds
+ - tar -xvf consensus_SNV_all_samples.rds
  
  leave these directories in home directory /home/ubuntu or adjust next statement for dir location 
  
