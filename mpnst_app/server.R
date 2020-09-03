@@ -483,7 +483,7 @@ function(input, output, session) {
                 #input_donor_choice_mutation = as.vector( mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)] )
              
           
-         
+              if(input$mutation_select_choice == "Select Donors") {
                 
               dons = c(); mm =c()
           
@@ -530,19 +530,19 @@ function(input, output, session) {
           	  
           	  ### read in file containing all the respective snv/indel samples 
           	  
-             # }    else {
-             #           
-             #         input_file_mutation_all <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_all_samples.rds")
-             #         
-             #         print(input_file_mutation_all)
-             # 
-             #         nn = readRDS(input_file_mutation_all)
-             #         
-             #         rownames(nn) = 1:nrow(nn)
-             #        
-             #         return(nn)
-             #         
-             #         }
+             }    else {
+
+                     input_file_mutation_all <- paste0("./consensus_",input$var,"_ind/consensus_",input$var,"_all_samples.rds")
+
+                     print(input_file_mutation_all)
+
+                     nn = readRDS(input_file_mutation_all)
+
+                     rownames(nn) = 1:nrow(nn)
+
+                     return(nn)
+
+                     }
           
                    
 	      })
