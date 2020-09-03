@@ -8,7 +8,7 @@ The MPNST Surveyor is a database for displaying genomic analysis from the sequen
  
  Made using R Shiny, styled with HTML and CSS.
  
- Deployed on AWS EC2 instance, instructions below ---
+ Deployed on AWS r4 EC2 instance, instructions below ---
  
  
  # Prerequisites: 
@@ -29,7 +29,8 @@ The MPNST Surveyor is a database for displaying genomic analysis from the sequen
  
  - docker build -t mpnst_app . 
  
- #after container 'mpnst_app' is built, add in the necessary data files as volumes 
+ #after container 'mpnst_app' is built, add in the necessary data files as volumes. 
+ Because of the size of these directo
  
  Data volumes to have on instance (available on EBI Cluster) 
  
@@ -42,10 +43,10 @@ The MPNST Surveyor is a database for displaying genomic analysis from the sequen
  - tar -xvf bamsnap_INDEL.tar.gz
  
  - tar -xvf bamsnap_SNV.tar.gz
+  
+ leave all these files/directories in the home directory /home/ubuntu or adjust next statement for dir location 
  
- - tar -xvf consensus_SNV_all_samples.rds
  
- leave these directories in home directory /home/ubuntu or adjust next statement for dir location 
  
  ------------------------------------
  
