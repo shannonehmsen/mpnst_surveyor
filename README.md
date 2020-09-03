@@ -2,7 +2,7 @@
 
 The MPNST Surveyor is a database for displaying genomic analysis from the sequencing of MPNST tumors. Please visit the <a href="https://www.nfresearch-childrens.org/">NF Research Initiative</a> website to learn more. 
 
- Currently reached <a href="http://18.206.76.181:8000/">here</a> 
+ The website can currently be reached at <a href="http://18.206.76.181:8000/">http://18.206.76.181:8000/</a> 
  
  Details:
  
