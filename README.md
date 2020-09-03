@@ -1,6 +1,8 @@
 # mpnst_surveyor
 
- Comprehensive genomic analysis from the sequencing of MPNST tumors. Research conducted through the GeM Consortium of the NF Research Initiative. 
+The MPNST Surveyor is a database for displaying genomic analysis from the sequencing of MPNST tumors. Research conducted through the GeM Consortium of the NF Research Initiative. 
+
+ Currently reached <a href="http://18.206.76.181:8000/">here</a> 
  
  Details:
  
