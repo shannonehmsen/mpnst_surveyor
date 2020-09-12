@@ -1,12 +1,14 @@
 # mpnst_surveyor
 
- Comprehensive genomic analysis from the sequencing of MPNST tumors. Research conducted through the GeM Consortium of the NF Research Initiative. 
+The MPNST Surveyor is a database for displaying genomic analysis from the sequencing of MPNST tumors. Please visit the <a href="https://www.nfresearch-childrens.org/">NF Research Initiative</a> website to learn more. 
+
+ The website can currently be reached at <a href="http://18.206.76.181:8000/">http://18.206.76.181:8000/</a> 
  
  Details:
  
  Made using R Shiny, styled with HTML and CSS.
  
- Deployed on AWS EC2 instance, instructions below ---
+ Deployed on AWS r4 EC2 instance, instructions below ---
  
  
  # Prerequisites: 
@@ -27,7 +29,8 @@
  
  - docker build -t mpnst_app . 
  
- #after container 'mpnst_app' is built, add in the necessary data files as volumes 
+ #after container 'mpnst_app' is built, add in the necessary data files as volumes. 
+ Because of the size of these directo
  
  Data volumes to have on instance (available on EBI Cluster) 
  
@@ -40,10 +43,10 @@
  - tar -xvf bamsnap_INDEL.tar.gz
  
  - tar -xvf bamsnap_SNV.tar.gz
+  
+ leave all these files/directories in the home directory /home/ubuntu or adjust next statement for dir location 
  
- - tar -xvf consensus_SNV_all_samples.rds
  
- leave these directories in home directory /home/ubuntu or adjust next statement for dir location 
  
  ------------------------------------
  
