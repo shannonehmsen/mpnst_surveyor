@@ -233,7 +233,7 @@ function(input, output, session) {
       
       
           DT::datatable(m_table_1, filter = list(position = "top", clear = FALSE), options=list(pageLength = 10, lengthMenu = c( 10, 25, 100), scrollX = T ),
-                        selection=list(mode="single", target="cell"))
+                        selection=list(mode="single", target="row"))
     })
 	 
 	
@@ -285,7 +285,7 @@ function(input, output, session) {
 	   
 	   
 	   DT::datatable(m_table_1, filter = list(position = "top", clear = FALSE), options=list(pageLength = 10,lengthMenu = c( 10, 25, 100), scrollX = T ),
-	                 selection=list(mode="single", target="cell"))
+	                 selection=list(mode="single", target="row"))
 	 })
 
 	 
@@ -331,11 +331,11 @@ function(input, output, session) {
       
       ## find the value of the selected cell
       
-      chr_location_value_snv = input$table_SNVs_cell_clicked$value
+      chr_location_value_snv = loadsnvtable()[input$table_SNVs_rows_selected,which(colnames(loadsnvtable())=="Start")]
       
       ## get the chromosome number from the cell to the left of selected cell
       
-      chr_number_snv = loadsnvtable()[input$table_SNVs_cell_clicked$row,which(colnames(loadsnvtable())=="Chr")]
+      chr_number_snv = loadsnvtable()[input$table_SNVs_rows_selected,which(colnames(loadsnvtable())=="Chr")]
       
       ## concatenate the call to file to pull the sequencing image
       
@@ -348,28 +348,6 @@ function(input, output, session) {
       
     })
     
-    
-    ## renders bamsnap image for snv datatable when input show_bamsnap_image_snv is enacted 
-    
-    observeEvent(input$show_bamsnap_image_snv,{
-      insertUI(
-        selector = "div#snv_div",
-        where = c("afterBegin"),
-        uiOutput("bamsnap_SNV_explore")
-      )
-      
-    })
-    
-    ## clear image for snv data table below biocircos
-    
-    observeEvent(input$clear_bamsnap_image_snv, {
-      
-      removeUI(
-        selector = "div#bamsnap_SNV_explore"
-        
-      )
-      
-    })
     
 
     ## reactive function to load indels corresponding with the donor selected for the circos plot (loads below snv table)
@@ -399,17 +377,13 @@ function(input, output, session) {
               
               donor = as.vector( mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor)] )
               
-              ## assign variable to selected cell
-              
-              chr_location_cell_indel = input$table_INDELs_cell_clicked
-              
               ## find the value of the selected cell
               
-              chr_location_value_indel = chr_location_cell_indel$value
+              chr_location_value_indel = loadindeltable()[input$table_INDELs_rows_selected,which(colnames(loadindeltable())=="Start")]
               
               ## get the chromosome number from the cell to the left of selected cell
               
-              chr_number_indel = loadindeltable()[input$table_INDELs_cell_clicked$row,which(colnames(loadindeltable())=="Chr")]
+              chr_number_indel = loadindeltable()[input$table_INDELs_rows_selected,which(colnames(loadindeltable())=="Chr")]
               
               ## concatenate the call to file to pull the sequencing image
               
@@ -422,29 +396,7 @@ function(input, output, session) {
     })
     
     
-    ## renders bamsnap image for indel datatable when input show_bamsnap_image_indel is enacted 
-    
-    observeEvent(input$show_bamsnap_image_indel,{
-      insertUI(
-        selector = "div#indel_div",
-        where = c("afterBegin"),
-        uiOutput("bamsnap_INDEL_explore")
-      )
-      
-    })
-    
-    ## clear image for indel data table below biocircos
-    
-    observeEvent(input$clear_bamsnap_image_indel, {
-      
-      removeUI(
-        selector = "div#bamsnap_INDEL_explore"
-      
-      )
-      
-    })
-    
-    
+
     
     ## loads CN file with data corresponding to the donor selected in the circos plot above (loads below indel data)
     
@@ -561,73 +513,19 @@ function(input, output, session) {
     
     ## when action button to clear donor selections is pressed, updates the picker input to its originial display 
     
-    # observeEvent(input$clear_donor_selections, {
-    #   updatePickerInput(
-    #     session, 
-    #     "donor_choice_mutation", 
-    #     selected = "BCH_001_S4FU683F_S7EH61A2"
-    #   )
-    # })
-    
-         
-   #output of data_table for mutation data (snv/indels) 
-   #data table where all chromosomes are shown 
-  
-          
-    output$selected_mutation_all_chr <- DT::renderDataTable({
-      
-      ##change df from reactive because shiny doesn't allow changes to col names for reactive
-      m_table_1 <- mutation_data_table()
-      
-      ## reorder and rename columns
-      colnames(m_table_1)[which(names(m_table_1) == "sample")] <- "Sample"
-      colnames(m_table_1)[which(names(m_table_1) == "avsnp147")] <- "Avsnp147"
-      colnames(m_table_1)[which(names(m_table_1) == "Sift_pred")] <- "Sift_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "Polyphen2_HDIV_pred")] <- "Polyphen2_HDIV_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "LRT_pred")] <- "LRT_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "MutationTaster_pred")] <- "Mutation_Taster_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "MutationAssessor_pred")] <- "Mutation_Assessor_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "FATHMM_pred")] <- "FATHMM_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "PROVEAN_pred")] <- "PROVEAN_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "CADD_raw")] <- "CADD_Raw"
-      colnames(m_table_1)[which(names(m_table_1) == "DANN_score")] <- "DANN_Score"
-      colnames(m_table_1)[which(names(m_table_1) == "fathmm-MKL_coding_pred")] <- "Fathmm-MKL_Coding_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "MetaSVM_pred")] <- "Meta_SVM_Pred"
-      colnames(m_table_1)[which(names(m_table_1) == "Chr_CN_segment")] <- "Chr_CN_Segment"
-      colnames(m_table_1)[which(names(m_table_1) == "Start_CN_segment")] <- "Start_CN_Segment"
-      colnames(m_table_1)[which(names(m_table_1) == "End_CN_segment")] <- "End_CN_Segment"
-      colnames(m_table_1)[which(names(m_table_1) == "Total_CN_normal")] <- "Total_CN_Normal"
-      colnames(m_table_1)[which(names(m_table_1) == "Minor_CN_normal")] <- "Minor_CN_Normal"
-      colnames(m_table_1)[which(names(m_table_1) == "Total_CN_tumour")] <- "Total_CN_Tumour"
-      colnames(m_table_1)[which(names(m_table_1) == "Minor_CN_tumour")] <- "Minor_CN_Tumour"
-      colnames(m_table_1)[which(names(m_table_1) == "gender")] <- "Gender"
-      colnames(m_table_1)[which(names(m_table_1) == "callers")] <- "Callers"
-      colnames(m_table_1)[which(names(m_table_1) == "NumCallers")] <- "Num_Callers"
-      colnames(m_table_1)[which(names(m_table_1) == "dista")] <- "Distance"
-      colnames(m_table_1)[which(names(m_table_1) == "label")] <- "Label"
-      colnames(m_table_1)[which(names(m_table_1) == "tumour_VAF")] <- "Tumour_VAF"
-      colnames(m_table_1)[which(names(m_table_1) == "tumour_DP")] <- "Tumour_DP"
-      colnames(m_table_1)[which(names(m_table_1) == "normal_VAF")] <- "Normal_VAF"
-      colnames(m_table_1)[which(names(m_table_1) == "normal_DP")] <- "Normal_DP"
-      colnames(m_table_1)[which(names(m_table_1) == "confidence")] <- "Confidence"
-
-
-      # move Sample column to the front 
-      setcolorder(m_table_1, c("Sample",colnames(m_table_1)[!(colnames(m_table_1) %in% c("Sample"))]))
-      
-      
-              
-                      DT::datatable(m_table_1, filter = list(   
-                        position = 'top', clear = FALSE), 
-                        
-                        selection=list(mode="single", target="cell")
-                      )
-      
+    observeEvent(input$clear_donor_selections, {
+      updatePickerInput(
+        session,
+        "donor_choice_mutation",
+        selected = "BCH_001_S4FU683F_S7EH61A2"
+      )
     })
     
+        
     
-    ## output of data table for mutation data (snv/indels) where 
-    ## the user is sorting based on chromosome 
+    
+    ## output of data table for mutation data (snv/indels) 
+    ## the user can sort based on chromosomes
     
     output$selected_mutation_chr_sort <- DT::renderDataTable({
       
@@ -703,87 +601,11 @@ function(input, output, session) {
                       DT::datatable(x2, filter = list(   
                         position = 'top', clear = FALSE), 
                         
-                        selection=list(mode="single", target="cell")
+                        selection=list(mode="single", target="row")
                       )
       
     })
-    
-    
-    
-    ## renders a png of sequencing data corresponding with the specific mutation
-    ## the user will select a chromosome start position on the data table which will generate the image below 
-    ## specifically for the datatable where all chrs are being selected
-    
-
-    output$bamsnap_image_selected_all <- renderUI({
-      
-      
-              ## assign variable to selected cell 
-              
-              chr_location_cell = input$selected_mutation_all_chr_cell_clicked
-              
-              
-              ## find the value of the selected cell 
-              
-              chr_location_value = chr_location_cell$value
-              
-              ## get the chromosome number from the cell to the left of selected cell 
-              
-              chr_number = mutation_data_table()[input$selected_mutation_all_chr_cell_clicked$row,which(colnames(mutation_data_table())=="Chr")]
-              
-              
-              ## images use old sample id naming 
-              
-              old_donor_name = as.vector(mapping_IDs$sample[which(as.vector(mapping_IDs$fixed_sample_IDs) == input$donor_choice_mutation)])
-              
-              ##which(colnames(mutation_data_table())=="sample")
-              ##match("sample",names(mutation_data_table()))
-              ## ^^ options for retrieving col number given column name sample 
-              
-              donor_id_from_column = mutation_data_table()[input$selected_mutation_all_chr_cell_clicked$row,which(colnames(mutation_data_table())=="sample")]
-              
-              
-              
-              bamsnap_folder = paste0("bamsnap_",input$var)
-              
-              ## create a higher folder to hold SNV/INDEL reads so that volume can be linked to Docker image 
-              
-              reads_folder = paste0(input$var,"_reads")
-              
-              ## concatenate the call to file to pull the sequencing image 
-              
-              sequencing_image <- paste0("/",reads_folder,"/",bamsnap_folder,"/",donor_id_from_column,"/",chr_number,"_",chr_location_value,".png")
-              
-              print(sequencing_image)
-              
-              ## renders the sequencing image, and makes sure there is not a 'broken image' icon before the user selects an image
-              
-              tags$img(src = sequencing_image, alt = "")
-      
-      
-    })
-    
-    
-    ## renders bamsnap image for datatable with all chrs when input show_bamsnap_image_all is enacted 
-    
-    observeEvent(input$show_bamsnap_image_all,{
-      insertUI(
-        selector = "div#all_div",
-        where = c("afterBegin"),
-        uiOutput("bamsnap_image_selected_all")
-      )
-      
-    })
-    
-    ## clear image for mutation data table with all chromosomes 
-    
-    observeEvent(input$clear_bamsnap_image_all, {
-      
-      removeUI(
-        selector = "div#bamsnap_image_selected_all"
-      )
-      
-    })
+  
     
     
     
@@ -799,15 +621,15 @@ function(input, output, session) {
       
               ## assign variable to selected cell
               
-              chr_location_cell_1 = input$selected_mutation_chr_sort_cell_clicked
+             # chr_location_cell_1 = input$selected_mutation_chr_sort_cell_clicked
               
               ## find the value of the selected cell
               
-              chr_location_value_1 = chr_location_cell_1$value
+              chr_location_value_1 = mutation_data_table()[input$selected_mutation_chr_sort_rows_selected,which(colnames(mutation_data_table())=="Start")]
               
               ## get the chromosome number from the cell to the left of selected cell
               
-              chr_number_1 = mutation_data_table()[input$selected_mutation_chr_sort_cell_clicked$row,which(colnames(mutation_data_table())=="Chr")]
+              chr_number_1 = mutation_data_table()[input$selected_mutation_chr_sort_rows_selected,which(colnames(mutation_data_table())=="Chr")]
               
               
               ## images use old sample id naming
@@ -818,7 +640,7 @@ function(input, output, session) {
               ##match("sample",names(mutation_data_table()))
               ## ^^ options for retrieving col number given column name sample
               
-              donor_id_from_column_1 = mutation_data_table()[input$selected_mutation_chr_sort_cell_clicked$row, which(colnames(mutation_data_table())=="sample")]
+              donor_id_from_column_1 = mutation_data_table()[input$selected_mutation_chr_sort_rows_selected, which(colnames(mutation_data_table())=="sample")]
               
               ##concatenates the correct bamsnap folder (either indels or snvs)
               
@@ -839,29 +661,6 @@ function(input, output, session) {
       
     })
     
-    ## renders bamsnap image for datatable selecting by chr when input show_bamsnap_image_chr is enacted 
-    
-    observeEvent(input$show_bamsnap_image_chr,{
-          insertUI(
-            selector = "div#all_div",
-            where = c("afterBegin"),
-            uiOutput("bamsnap_image_selected_chrs")
-          )
-      
-    })
-  
-    ## clear image for mutation data table sorting by chromosome 
-    
-    observeEvent(input$clear_bamsnap_image_chr, {
-      
-          removeUI(
-            selector = "div#bamsnap_image_selected_chrs_div"
-        )
-
-    })
-
-    
-
     
     ## All functionality for the cBioPortal tab is done on the ui side ---------------
       

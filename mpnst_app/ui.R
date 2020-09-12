@@ -279,21 +279,9 @@ shinyUI(
                                       
                                       ),
                                       
-                                      ## offers the user opportunity to clear the bamsnap image below snv table 
+                                      br(),
                                       
-                                      actionButton(
-                                        inputId = "clear_bamsnap_image_snv",
-                                        label = "Clear Raw Sequencing Read",
-                                        
-                                      ),
-                                      
-                                      actionButton(
-                                        inputId = "show_bamsnap_image_snv",
-                                        label = "Show Raw Sequencing Read"
-                                      ),
-                                      
-                                      
-                                      h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
+                                      h5("Select a row in the data table to view the corresponding raw sequencing read. To hide the image, please deselect the chosen row.", 
                                          style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
                                       
                                       
@@ -327,20 +315,9 @@ shinyUI(
                                   
                                       ),
                                       
+                                      br(),
                                       
-                                      actionButton(
-                                        inputId = "clear_bamsnap_image_indel",
-                                        label = "Clear Raw Sequencing Read",
-                                      
-                                      ),
-                                      
-                                      actionButton(
-                                        inputId = "show_bamsnap_image_indel",
-                                        label = "Show Raw Sequencing Read"
-                                      ),
-                                      
-                                      
-                                      h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
+                                      h5("Select a row in the data table to view the corresponding raw sequencing read. To hide the image, please deselect the chosen row.", 
                                          style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
                                       
                                       
@@ -396,7 +373,7 @@ shinyUI(
                   h2("The reactive data table below provides the opportunity to query SNV or INDEL data from multiple tumor samples" , style="font-family: Verdana; font-weight: bolder; font-size: 13pt; 
                      padding: 10px; color: black;"),
                   
-                  h5("Select a cell in the 'Start' column of the data table to view a raw sequencing read below:", 
+                  h5("Select a row in the data table to view the corresponding raw sequencing read for that mutation. To hide the image, please deselect the chosen row.", 
                      style="font-family: Verdana; font-size: 11.5pt; color: black; padding: 10px;"),
                   
                   
@@ -421,22 +398,11 @@ shinyUI(
                                                 
                                                   selected = "SNV"),
                                       
-                                      
-                                      pickerInput("chrs", multiple=FALSE,
-                                                  label = "View all chromosomes, or make individual selections:",
-                                                  choices = c("All",
-                                                              "Select Chrs"),
-                                                  
-                                                  selected = "All"),
-                                      
-                                      
-                                      conditionalPanel(
-                                        
-                                       condition = "input.chrs == 'Select Chrs'",
+                              
+                                      # pickerInput on the server side for the user to choose which chromosomes to view 
                                        
-                                       uiOutput("mutation_data_chr_picker")
-                                        
-                                      ),
+                                      uiOutput("mutation_data_chr_picker"),
+                                      
                                       
                                       
                                       helpText("*Note: When querying large amounts of data, please be patient while the table is processing,
@@ -485,63 +451,14 @@ shinyUI(
                         mainPanel(
                           
                           
-                          conditionalPanel(
-                          
-                          condition = "input.chrs == 'All'",
-                          
-                          div(dataTableOutput("selected_mutation_all_chr"), 
-                              style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
-                          
-                          br(),
-                          
-                          
-                          actionButton(
-                            inputId = "clear_bamsnap_image_all",
-                            label = "Clear Raw Sequencing Read",
-                           # style="color: #fff; background-color: #e95420"
-                          ),
-                          
-                          actionButton(
-                            inputId = "show_bamsnap_image_all",
-                            label = "Show Raw Sequencing Read"
-                          ),
-                          
-                          
-                          h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
-                             style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
-                          
-                          
-                          div(id="bamsnap_image_selected_all_div",       
-                              uiOutput("bamsnap_image_selected_all")
-                          ),
-                          
-                          div(id="all_div",
-                              
-                              )
-                          
-                          ),
-                          
-                          conditionalPanel(
-                            
-                          condition = "input.chrs == 'Select Chrs'",
-                          
                           div(dataTableOutput("selected_mutation_chr_sort"), 
                               style = 'overflow-x: scroll; font-size: 83%; width = 69%', options=list(autoWidth=TRUE)),
                           
                           br(),
                           
-                          actionButton(
-                            inputId = "clear_bamsnap_image_chr",
-                            label = "Clear Raw Sequencing Read"
-                          ),
                           
-                          actionButton(
-                            inputId = "show_bamsnap_image_chr",
-                            label = "Show Raw Sequencing Read"
-                          ),
-                          
-                          h5("To view raw sequencing reads for each mutation, select a cell in the 'Start' column of the loaded data table. This will produce an image here:", 
-                             style="font-family: Verdana; font-size: 10pt; color: black; padding: 10px;"),
+                          h5("Select a row in the data table to view the corresponding raw sequencing read. To hide the image, please deselect the chosen row.", 
+                             style="font-family: Verdana; font-size: 10pt; color: black; padding: 11px;"),
                           
                               
                          div(id="bamsnap_image_selected_chrs_div",       
@@ -555,7 +472,7 @@ shinyUI(
                          
                           )  
                         )
-                      )
+                      #)
                       
                       
                       
