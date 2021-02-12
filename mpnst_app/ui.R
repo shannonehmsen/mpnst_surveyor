@@ -27,7 +27,7 @@ source("load_data.R")
 shinyUI(
   navbarPage(fluid =TRUE, position = c("static-top"), id = "nav_bar_page",
              
-             "MPNST Surveyor", theme = shinytheme("cerulean"),
+             "MPNST Surveyor", theme = shinytheme("flatly"),
              
         
              
